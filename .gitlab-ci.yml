@@ -12,3 +12,7 @@ before_script:
 test:
   script:
   - python -m pytest --cov-report html --cov
+  artifacts:
+    paths:
+    - htmlcov/
+    expire_in: 1 week
