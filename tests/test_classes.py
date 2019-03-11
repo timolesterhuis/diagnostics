@@ -23,7 +23,7 @@ def test_timeserie_init():
 
 
 def test_timeserie_datetime_t0():
-    a = TimeSerie([1,2,3], t0=pytz.localize(dt.datetime(2000,1,1)), fs=1, name='a')
+    a = TimeSerie([1,2,3], t0=pytz.utc.localize(dt.datetime(2000,1,1)), fs=1, name='a')
     assert a.t0 == 946684800.0
     return True
 
