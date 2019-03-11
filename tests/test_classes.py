@@ -2,6 +2,8 @@ import numpy as np
 import pytest
 from diagnostics import TimeSerie, BooleanTimeSerie, StateChangeArray, Report, Event
 import datetime as dt
+import pytz 
+
 
 def compare_timeseries(a, b):
     data = all(a.data == b.data)
@@ -21,8 +23,8 @@ def test_timeserie_init():
 
 
 def test_timeserie_datetime_t0():
-    a = TimeSerie([1,2,3], t0=dt.datetime(2000,1,1), fs=1, name='a')
-    assert a.t0 == 946681200.0
+    a = TimeSerie([1,2,3], t0=pytz.localize(dt.datetime(2000,1,1)), fs=1, name='a')
+    assert a.t0 == 946684800.0
     return True
 
 
