@@ -374,19 +374,19 @@ class TimeSerie(object):
     def interpolate(self, t_new, inplace=False):
         data = np.interp(t_new, self.t, self.data)
         fs = np.mean(1 / np.diff(t_new))
+
+        if self.is_bool():
+            data = data.astype(np.bool)
+            classtype = BooleanTimeSerie
+        else:
+            classtype = TimeSerie
+
         if inplace:
-            self.data = (
-                data
-            )  # TODO: in case of BooleanTimeSerie, check if data is boolean (create data as a property!)
+            self.data = data
             self.fs = fs
             self.t0 = t_new[0]
         else:
-            if self.is_bool():
-                return BooleanTimeSerie(
-                    data.astype(np.bool), fs=fs, t0=t_new[0], name=self.name
-                )
-            else:
-                return TimeSerie(data, fs=fs, t0=t_new[0], name=self.name)
+            return classtype(data, fs=fs, t0=t_new[0], name=self.name)
 
     def is_bool(self):
         return self.data.dtype == np.bool
@@ -439,7 +439,7 @@ class BooleanTimeSerie(TimeSerie):
     def data(self, value):
         if not isinstance(value, np.ndarray):
             value = np.array(value)
-        if data.dtype != np.bool:
+        if value.dtype != np.bool:
             raise ValueError("data is not of dtype 'bool'")
         self._data = value
 

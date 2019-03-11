@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 from diagnostics import TimeSerie, BooleanTimeSerie, StateChangeArray, Report, Event
+import datetime as dt
 
 def compare_timeseries(a, b):
     data = all(a.data == b.data)
@@ -10,8 +11,7 @@ def compare_timeseries(a, b):
     return (data & channel & name)
 
 
-def test_init():
-    from numpy import array
+def test_timeserie_init():
     a = TimeSerie([1,2,3], t0=0, fs=1, name='a')
     assert all(a.data == [1,2,3])
     assert a.t0 == 0
@@ -20,31 +20,28 @@ def test_init():
     return True
 
 
-def test_datetime_t0():
-    from datetime import datetime
-    a = TimeSerie([1,2,3], t0=datetime(2000,1,1), fs=1, name='a')
+def test_timeserie_datetime_t0():
+    a = TimeSerie([1,2,3], t0=dt.datetime(2000,1,1), fs=1, name='a')
     assert a.t0 == 946681200.0
     return True
 
 
-def test_nparray():
-    from numpy import array, ndarray
-    a = TimeSerie(array([1,2,3]), t0=0, fs=1, name='a')
-    assert isinstance(a.data, ndarray)
+def test_timeserie_nparray():
+    a = TimeSerie(np.array([1,2,3]), t0=0, fs=1, name='a')
+    assert isinstance(a.data, np.ndarray)
     b = TimeSerie([1,2,3], t0=0, fs=1, name='b')
-    assert isinstance(b.data, ndarray)
+    assert isinstance(b.data, np.ndarray)
     return True
 
 
-def test_properties():
-    from numpy import ndarray
+def test_timeserie_properties():
     a = TimeSerie([1,2,3], name='a', fs=2, t0=1)
     assert a.hz == a.fs
     a.hz = 1
     assert a.fs == 1
     b = TimeSerie([4,5,6], name='a', fs=1, t0=1)
     b.data = [1,2,3]
-    assert isinstance(b.data, ndarray)
+    assert isinstance(b.data, np.ndarray)
     assert all(b.data == [1,2,3])
     assert compare_timeseries(a,b)
     with pytest.raises(ValueError):
@@ -52,10 +49,7 @@ def test_properties():
     return True
 
 
-
-    return True
-
-def test_resett0():
+def test_timeserie_resett0():
     a = TimeSerie([1,2,3], name='a', fs=2, t0=1)
     assert a.t0 == 1
     a.reset_t0()
@@ -63,25 +57,25 @@ def test_resett0():
     return True
 
 
-def test_roundt0():
-    from numpy import arange
-    a = TimeSerie(arange(10), name='a', fs=1, t0=1.1)
+def test_timeserie_roundt0():
+    a = TimeSerie(np.arange(10), name='a', fs=1, t0=1.1)
     assert a.t0 == 1.1
     a.round_t0()
     assert a.t0 == 1.0
-    a = TimeSerie(arange(100), name='a', fs=10, t0=1.11)
+    a = TimeSerie(np.arange(100), name='a', fs=10, t0=1.11)
     assert a.t0 == 1.11
     a.round_t0()
     assert a.t0 == 1.1
 
 
-def test_iter():
+def test_timeserie_iter():
     a = TimeSerie([1,2,3], fs=2, t0=1)
     lst = list(a.iter())
     assert lst == [(1.0,1), (1.5,2), (2.0,3)]
+    return True
 
 
-def test_defaultsettings():
+def test_timeserie_defaultsettings():
     a = TimeSerie([1,2,3])
     assert a.name == ''
     assert a.t0 == 0
@@ -89,13 +83,13 @@ def test_defaultsettings():
     return True
 
 
-def test_fsfloat():
+def test_timeserie_fsfloat():
     a = TimeSerie([1,2,3], fs=1.1)
     assert a.fs == 1
     return True
 
 
-def test_repr():
+def test_timeserie_repr():
     a = TimeSerie([1,2,3], fs=2, t0=1, name='a')
     assert repr(a) == "TimeSerie([1 2 3], t0=1, name='a', fs=2)"
     b = TimeSerie([1,2,3,4,5,6,7], fs=3, t0=2, name='b')
@@ -103,7 +97,7 @@ def test_repr():
     return True
 
 
-def test_len():
+def test_timeserie_len():
     a = TimeSerie([1,2,3])
     assert len(a) == 3
     b = TimeSerie([1,2,3,4,5,6,7])
@@ -111,7 +105,7 @@ def test_len():
     return True
 
 
-def test_getitem():
+def test_timeserie_getitem():
     a = TimeSerie([1,2,3])
     assert a[0] == 1
     assert a[-1] == 3
@@ -120,8 +114,7 @@ def test_getitem():
     return True
 
 
-def test_eq():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_eq():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)    
     eq_1 = (a == a)
     assert compare_timeseries(eq_1, BooleanTimeSerie([True, True, True], t0=1, name='(a == a)', fs=1))
@@ -133,8 +126,7 @@ def test_eq():
     return True
 
 
-def test_neq():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_neq():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)    
     eq_1 = (a != a)
     assert compare_timeseries(eq_1, BooleanTimeSerie([False, False, False], t0=1, name='(a != a)', fs=1))
@@ -146,8 +138,7 @@ def test_neq():
     return True
 
 
-def test_lessthen():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_lessthen():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     b = TimeSerie([3,1,5], name='b', fs=1, t0=1)
     lt_1 = (b < a)
@@ -160,8 +151,7 @@ def test_lessthen():
     return True
 
 
-def test_greaterthen():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_greaterthen():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     b = TimeSerie([3,1,5], name='b', fs=1, t0=1)
     lt_1 = (a > b)
@@ -174,8 +164,7 @@ def test_greaterthen():
     return True
 
 
-def test_lessequalthen():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_lessequalthen():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     b = TimeSerie([3,1,3], name='b', fs=1, t0=1)
     lt_1 = (b <= a)
@@ -188,8 +177,7 @@ def test_lessequalthen():
     return True
 
 
-def test_greaterequalthen():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_greaterequalthen():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     b = TimeSerie([3,1,3], name='b', fs=1, t0=1)
     lt_1 = (a >= b)
@@ -202,8 +190,7 @@ def test_greaterequalthen():
     return True
 
 
-def test_and():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_and():
     a = TimeSerie([True,True,False,False], name='a', fs=1, t0=1)
     b = BooleanTimeSerie([True,False,True,False], name='b', fs=1, t0=1)
     c = TimeSerie([1,2,3,4], name='c', fs=1, t0=1)
@@ -217,8 +204,7 @@ def test_and():
     return True
 
 
-def test_or():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_or():
     a = TimeSerie([True,True,False,False], name='a', fs=1, t0=1)
     b = BooleanTimeSerie([True,False,True,False], name='b', fs=1, t0=1)
     c = TimeSerie([1,2,3,4], name='c', fs=1, t0=1)
@@ -232,8 +218,7 @@ def test_or():
     return True
 
 
-def test_xor():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_xor():
     a = TimeSerie([True,True,False,False], name='a', fs=1, t0=1)
     b = BooleanTimeSerie([True,False,True,False], name='b', fs=1, t0=1)
     c = TimeSerie([1,2,3,4], name='c', fs=1, t0=1)
@@ -247,8 +232,7 @@ def test_xor():
     return True
 
 
-def test_invert():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_invert():
     a = TimeSerie([True,False], name='a', fs=1, t0=1)
     b = TimeSerie([1,2,3,4], name='b', fs=1, t0=1)
     invert_1 = ~a
@@ -258,7 +242,7 @@ def test_invert():
     return True
 
 
-def test_add():
+def test_timeserie_add():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     b = TimeSerie([3,1,3], name='b', fs=1, t0=1)
     add_1 = a + b
@@ -271,14 +255,14 @@ def test_add():
     return True
 
 
-def test_radd():
+def test_timeserie_radd():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     add_1 = 1 + a
     assert compare_timeseries(add_1, TimeSerie([2,3,4], name='', fs=1, t0=1))
     return True
 
 
-def test_sub():
+def test_timeserie_sub():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     b = TimeSerie([3,1,3], name='b', fs=1, t0=1)
     sub_1 = a - b
@@ -291,27 +275,26 @@ def test_sub():
     return True
 
 
-def test_rsub():
+def test_timeserie_rsub():
     a = TimeSerie([1,2,3], name='a', fs=1, t0=1)
     sub_1 = 1 - a
     assert compare_timeseries(sub_1, TimeSerie([0, -1, -2], name='', fs=1, t0=1))
     return True
 
 
-def test_emptytimeserie():
-    from datetime import datetime
+def test_timeserie_empty():
     a = TimeSerie.empty(1, 10, fs=10, name='a')
     assert len(a) == 90
     assert a.te == 9.9
     b = TimeSerie.empty(2, 5, 4, name='b', inclusive=True)
     assert len(b) == 13
     assert b.te == 5.0
-    c = TimeSerie.empty(datetime(2018,1,1,12), datetime(2018,1,1,13), fs=1, name='c', inclusive=True)
+    c = TimeSerie.empty(dt.datetime(2018,1,1,12), dt.datetime(2018,1,1,13), fs=1, name='c', inclusive=True)
     assert c.te - c.t0 == 3600.0
     return True
 
 
-def test_mod():
+def test_timserie_mod():
     a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name='a', fs=1, t0=1)
     b = a.modify("default", inplace=False)
     assert compare_timeseries(b, a)
@@ -332,15 +315,14 @@ def test_mod():
     return True
 
 
-def test_toevents():
+def test_timeserie_toevents():
     a = TimeSerie([1,2,3], t0=1, fs=2, name='a')
     events = a.to_events()
     # TODO: create assertions that check for correct events
     return True
 
 
-def test_tobool():
-    from diagnostics import BooleanTimeSerie
+def test_timeserie_tobool():
     a = TimeSerie([0,0,0,1,2,3], t0=1, fs=2, name='a')
     b = a.to_bool(inplace=False)
     assert compare_timeseries(b, BooleanTimeSerie([False, False, False, True, True, True], t0=1, fs=2, name='a'))
@@ -349,14 +331,14 @@ def test_tobool():
     return True
 
 
-def test_tostatechangearray():
+def test__timeserie_tostatechangearray():
     a = TimeSerie([1,1,1,2,2,3,4,4,4], t0=1, fs=2, name='a')
     statechangearray = a.to_statechangearray()
     # TODO: create assertions that check for correct statechangearray
     return True
 
 
-def test_interpolate():
+def test_timeserie_interpolate():
     a = TimeSerie([1,2,3,4,5,6,7,8,9,10], t0=0, fs=1, name='a')
     t_new = np.arange(0,9+0.5,0.5)
     b = a.interpolate(t_new, inplace=False)
@@ -369,4 +351,25 @@ def test_interpolate():
     assert compare_timeseries(d, BooleanTimeSerie(3*[False] + 7*[True] + 3*[False],t0=1, fs=2, name='c'))
     c.interpolate(t_new, inplace=True)
     assert compare_timeseries(c, d)
+    return True
+
+
+def test_booleantimeserie_init():
+    with pytest.raises(ValueError):
+        a = BooleanTimeSerie([1,2,3], fs=1, t0=1, name='a')
+    return True
+
+
+def test_booleantimeserie_properties():
+    a = BooleanTimeSerie([False,True,False], name='a', fs=2, t0=1)
+    assert a.hz == a.fs
+    a.hz = 1
+    assert a.fs == 1
+    b = BooleanTimeSerie([True,True,True], name='a', fs=1, t0=1)
+    b.data = [False,True,False]
+    assert isinstance(b.data, np.ndarray)
+    assert all(b.data == [False,True,False])
+    assert compare_timeseries(a,b)
+    with pytest.raises(ValueError):
+        a.data = [1,2,3]
     return True
