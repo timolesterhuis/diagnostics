@@ -18,3 +18,4 @@ test:
     paths:
     - htmlcov/
     expire_in: 1 week
+    when: always
