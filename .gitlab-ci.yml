@@ -11,7 +11,9 @@ before_script:
 
 test:
   script:
+  - ls
   - python -m pytest --cov-report html --cov
+  - ls
   artifacts:
     paths:
     - htmlcov/
