@@ -97,7 +97,7 @@ def test_timeserie_repr():
     a = TimeSerie([1, 2, 3], fs=2, t0=1, name="a")
     assert repr(a) == "TimeSerie([1 2 3], t0=1, name='a', fs=2)"
     b = TimeSerie([1, 2, 3, 4, 5, 6, 7], fs=3, t0=2, name="b")
-    assert repr(b) == "TimeSerie([1 2 3 ... 5 6 7], t0=2, name='b', fs=3)"
+    assert repr(b) == "TimeSerie([1 2 3 4 5 6 7], t0=2, name='b', fs=3)"
     return True
 
 
