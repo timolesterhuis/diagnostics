@@ -1,10 +1,10 @@
+import os
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-with open("requirements.txt", "r") as requirements_file:
-    requirements = requirements_file.read().split("\N")
+requirements = ["pytz", "numpy", "matplotlib"]
 
 setup(
     name="diagnostics",
