@@ -83,7 +83,7 @@ class TimeSerie(object):
 
     def __repr__(self):
         return "TimeSerie({}, t0={}, name={}, fs={})".format(
-            np.array2string(self.data, **self._reprconfig), *map(repr, [self.t0, self.name, self.fs])
+            np.array2string(self.data, threshold=10, separator=" "), *map(repr, [self.t0, self.name, self.fs])
         )
 
     #        return "TimeSerie({}, t0={}, name={}, fs={})".format(np.array2str(self.data, threshold=self._threshold), *map(repr, [self.t0, self.name, self.fs]))
