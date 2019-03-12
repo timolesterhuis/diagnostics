@@ -35,7 +35,7 @@ class TimeSerie(object):
             "zero_negatives": lambda x: x * (x > 0),
             "correct_negatives": lambda x: x - min(x * (x < 0)),
         }
-        self._reprconfig = {"threshold": 10}
+        self._reprconfig = {"threshold": 10, separator=" "}
 
     @property
     def data(self):
