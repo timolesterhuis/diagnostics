@@ -35,7 +35,7 @@ class TimeSerie(object):
             "zero_negatives": lambda x: x * (x > 0),
             "correct_negatives": lambda x: x - min(x * (x < 0)),
         }
-        # self._threshhold = 5
+        self._reprconfig = {"threshold": 10, separator=" "}
 
     @property
     def data(self):
@@ -83,7 +83,7 @@ class TimeSerie(object):
 
     def __repr__(self):
         return "TimeSerie({}, t0={}, name={}, fs={})".format(
-            self.data, *map(repr, [self.t0, self.name, self.fs])
+            np.array2string(self.data, **self._reprconfig), *map(repr, [self.t0, self.name, self.fs])
         )
 
     #        return "TimeSerie({}, t0={}, name={}, fs={})".format(np.array2str(self.data, threshold=self._threshold), *map(repr, [self.t0, self.name, self.fs]))
