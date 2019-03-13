@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-requirements = ["pytz", "numpy", "matplotlib"]
+requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 
 setup(
     name="diagnostics",
