@@ -1,4 +1,4 @@
-$language: python
+language: python
 # Existing Python versions
 python:
   - 3.5
