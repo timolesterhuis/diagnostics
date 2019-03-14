@@ -13,6 +13,29 @@ def compare_timeseries(a, b):
     return data & channel & name
 
 
+def compare_statechangearrays(a, b):
+    data = all(a.data == b.data)
+    t = all(a.t == b.t)
+    name = a.name == b.name
+    class_ = type(a) == type(b)
+    return data & t & class_
+
+
+def compare_events(a, b):
+    value = a.value == b.value
+    t = a.t == b.t
+    name = a.name == b.name
+    validity = a.validity == b.validity
+    class_ = type(a) == type(b)
+    return value & t & name & validity & class_
+
+def compare_reports(a, b):
+    t0 = a.t0 == b.t0
+    te = a.te == b.te
+    name = a.name == b.name
+    return t0 & te & name
+
+
 def test_timeserie_init():
     a = TimeSerie([1, 2, 3], t0=0, fs=1, name="a")
     assert all(a.data == [1, 2, 3])
@@ -428,4 +451,83 @@ def test_booleantimeserie_properties():
     assert compare_timeseries(a, b)
     with pytest.raises(ValueError):
         a.data = [1, 2, 3]
+    return True
+
+
+def test_statechangearray_init():
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8])
+    assert all(a.data == [1, 3, 5, 7])
+    assert all(a.t == [1,2,4,8])
+    assert a.name == ''
+    b = StateChangeArray([2, 4, 6, 8], t=[1, 2, 4, 8], name='b')
+    with pytest.raises(ValueError):
+        c = StateChangeArray([1, 2, 3, 4], t=[1,2,4], name="c")
+    d = StateChangeArray(np.array([1, 3, 5, 7]), t=np.array([1, 2, 4, 8]))
+    assert compare_statechangearrays(a, d)
+    with pytest.raises(ValueError):
+        e = StateChangeArray([1,2,3,4], [1, 5, 3, 8], name='E')
+    return True
+
+
+def test_statechangearray_iter():
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8])
+    gen = a.iter()
+    assert next(gen) == (1, 1)
+    assert next(gen) == (2, 3)
+    assert next(gen) == (4, 5)
+    assert next(gen) == (8, 7)
+    with pytest.raises(StopIteration):
+        next(gen)
+    return True
+
+
+def test_statechangearray_events():
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8], name='a')
+    e1, e2, e3, e4 = a.to_events()
+    assert compare_events(e1, Event(1, t=1, name='a'))
+    assert compare_events(e2, Event(3, t=2, name='a'))
+    assert compare_events(e3, Event(5, t=4, name='a'))
+    assert compare_events(e4, Event(7, t=8, name='a'))
+    return True
+
+def test_report_init():
+    a = Report(1, 3, name='a')
+    assert a.t0 == 1
+    assert a.te == 3
+    assert a.name == 'a'
+    start = pytz.utc.localize(dt.datetime(2000, 1, 1))
+    end = start + dt.timedelta(seconds=60)
+    b = Report(start, end, name="b")
+    assert b.t0 == 946684800.0
+    assert b.te == 946684860.0
+    return True
+
+
+def test_event_init():
+    a = Event(1)
+    assert a.value == 1
+    assert a.t == 0
+    assert a.name == ''
+    assert a.validity == 1
+    start = pytz.utc.localize(dt.datetime(2000, 1, 1))
+    b = Event(2, t=start)
+    assert b.value == 2
+    assert b.t == 946684800.0
+    c = Event(3, t=3, name='c')
+    assert c.value == 3
+    assert c.t == 3
+    assert c.name == 'c'
+    d = Event(4, t=4, name='d', validity=0)
+    assert d.value == 4
+    assert d.t == 4
+    assert d.name == 'd'
+    assert d.validity == 0
+    return True
+
+
+def test_event_state():
+    a = Event(4, t=4, name='a', validity=1)
+    assert a.state == a.value
+    a.validity = 0
+    assert a.state == '?'
     return True

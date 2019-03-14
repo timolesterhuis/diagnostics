@@ -453,19 +453,19 @@ class BooleanTimeSerie(TimeSerie):
         pass  # TODO: implement creation of BooleanTimeSerie from (multiple) reports. Might use report.to_timeserie() method and then combines multiple timeseries
 
 
-class StateChangeArray(object):
+class StateChangeArray(object):  # TODO: assert t is increasing in time (can't jump back in time!)
     def __init__(self, data, t, name=""):
 
         if len(data) != len(t):
             raise ValueError("data & t should be of the same length")
         if not isinstance(data, np.ndarray):
-            self.data = np.array(data)
-        else:
-            self.data = data
+            data = np.array(data)
+        self.data = data
         if not isinstance(t, np.ndarray):
-            self.t = np.array(t)
-        else:
-            self.t = t
+            t = np.array(t)
+        if any(np.diff(t) < 0):
+            raise ValueError("t should be chronilogical!")
+        self.t = t
         self.name = name
 
     def __repr__(self):
@@ -488,7 +488,7 @@ class StateChangeArray(object):
 
     def events(self):
         for t, v in self.iter():
-            e = Event(data=v, t=t, name=self.name)
+            e = Event(value=v, t=t, name=self.name)
             yield e
 
     def to_events(self):
@@ -529,7 +529,11 @@ class StateChangeArray(object):
 class Report(object):
     def __init__(self, t0, te, name=""):
 
+        if isinstance(t0, datetime.datetime):
+            t0 = t0.timestamp()
         self.t0 = t0
+        if isinstance(te, datetime.datetime):
+            te = te.timestamp()
         self.te = te
         self.name = name
 
@@ -553,12 +557,15 @@ class Event(object):
     def __init__(self, value, t=0, name="", validity=1):
 
         self.value = value
+        if isinstance(t, datetime.datetime):
+            t = t.timestamp()
         self.t = t
         self.name = name
         self.validity = validity
 
+    @property
     def state(self):
-        if validity:
+        if self.validity:
             return self.value
         else:
             return "?"
