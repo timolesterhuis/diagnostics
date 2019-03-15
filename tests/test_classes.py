@@ -465,7 +465,9 @@ def test_statechangearray_init():
     d = StateChangeArray(np.array([1, 3, 5, 7]), t=np.array([1, 2, 4, 8]))
     assert compare_statechangearrays(a, d)
     with pytest.raises(ValueError):
-        e = StateChangeArray([1,2,3,4], [1, 5, 3, 8], name='E')
+        e = StateChangeArray([1,2,3,4], [1, 5, 3, 8], name='e')
+    with pytest.raises(ValueError):
+        f  = StateChangeArray([1,2,2,3], [1,2,4,7], name='f')
     return True
 
 
@@ -489,6 +491,19 @@ def test_statechangearray_events():
     assert compare_events(e3, Event(5, t=4, name='a'))
     assert compare_events(e4, Event(7, t=8, name='a'))
     return True
+
+
+def test_statechangearray_duration():
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name='a')
+    assert all( a.duration() == [1,2,3])
+    return True
+
+def test_statechangearray_isbool():
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name='a')
+    assert a.is_bool() is False
+    a = StateChangeArray([True, False, True, False], t=[1, 2, 4, 7], name='a')
+    assert a.is_bool() is True
+
 
 def test_report_init():
     a = Report(1, 3, name='a')

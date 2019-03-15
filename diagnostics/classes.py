@@ -460,6 +460,8 @@ class StateChangeArray(object):  # TODO: assert t is increasing in time (can't j
             raise ValueError("data & t should be of the same length")
         if not isinstance(data, np.ndarray):
             data = np.array(data)
+        if any(data[1:] == data[:-1]):
+            raise ValueError("There was a jump where no state-change happend!")
         self.data = data
         if not isinstance(t, np.ndarray):
             t = np.array(t)
