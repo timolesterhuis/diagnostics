@@ -536,23 +536,25 @@ class Report(object):
         self.t0 = t0
         if isinstance(te, datetime.datetime):
             te = te.timestamp()
+        if te < t0:
+            raise ValueError("te can't be before t0!")
         self.te = te
         self.name = name
 
     @logged()
     def to_events(self):
-        event_t0 = Event(1, t=t0, name=name)
-        event_te = Event(0, t=te, name=name)
+        event_t0 = Event(1, t=self.t0, name=self.name)
+        event_te = Event(0, t=self.te, name=self.name)
         return (event_t0, event_te)
 
     @logged()
     def to_timeserie(self, fs=1, window=1):
-        t0 = (self.t0 - (window / fs),)
+        t0 = self.t0 - (window / fs)
         window_data = np.zeros(window)
-        k = round((te - t0) * fs)
+        k = round((self.te - t0) * fs)
         data = np.ones(k)
-        data = np.append(window_data, data, window_data)
-        return TimeSerie(data, t0=t0, fs=fs)
+        data = np.append(window_data, np.append(data, window_data))
+        return TimeSerie(data, t0=t0, fs=fs, name=self.name)
 
 
 class Event(object):

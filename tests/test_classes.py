@@ -498,6 +498,11 @@ def test_statechangearray_duration():
     assert all( a.duration() == [1,2,3])
     return True
 
+def test_statechangearray_totimeseries():
+
+    return True
+
+    
 def test_statechangearray_isbool():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name='a')
     assert a.is_bool() is False
@@ -515,6 +520,23 @@ def test_report_init():
     b = Report(start, end, name="b")
     assert b.t0 == 946684800.0
     assert b.te == 946684860.0
+    with pytest.raises(ValueError):
+        c = Report(t0=5, te=1, name='c')
+    return True
+
+
+def test_report_toevent():
+    a = Report(1, 3, name='a')
+    a_start, a_end = a.to_events()
+    assert compare_events(a_start, Event(1, t=1, name='a'))
+    assert compare_events(a_end, Event(0, t=3, name='a'))
+    return True
+
+
+def test_report_totimeserie():
+    a = Report(2, 4, name='a')
+    ts_a = a.to_timeserie()
+    assert compare_timeseries(ts_a, TimeSerie([0.,1.,1.,1.,0.], t0=1., fs=1, name='a'))
     return True
 
 
