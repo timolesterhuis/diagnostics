@@ -404,8 +404,10 @@ def test_timserie_mod():
 
 def test_timeserie_toevents():
     a = TimeSerie([1, 2, 3], t0=1, fs=2, name="a")
-    events = a.to_events()
-    # TODO: create assertions that check for correct events
+    e1, e2, e3 = a.to_events()
+    assert compare_events(e1, Event(1, t=1, name='a'))
+    assert compare_events(e2, Event(2, 1.5, name='a'))
+    assert compare_events(e3, Event(3, 2.0, name='a'))
     return True
 
 
@@ -423,8 +425,8 @@ def test_timeserie_tobool():
 
 def test__timeserie_tostatechangearray():
     a = TimeSerie([1, 1, 1, 2, 2, 3, 4, 4, 4], t0=1, fs=2, name="a")
-    statechangearray = a.to_statechangearray()
-    # TODO: create assertions that check for correct statechangearray
+    sta_a = a.to_statechangearray()
+    assert compare_statechangearrays(sta_a, StateChangeArray([1,2,3,4], t=[1, 2.5, 3.5, 4], name='a'))
     return True
 
 
