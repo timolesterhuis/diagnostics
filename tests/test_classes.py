@@ -6,14 +6,18 @@ import pytz
 
 
 def compare_timeseries(a, b):
+    if len(a) != len(b):
+        return False
     data = all(a.data == b.data)
     channel = a.channel == b.channel
     name = a.name == b.name
     class_ = type(a) == type(b)
-    return data & channel & name
+    return data & channel & name 
 
 
 def compare_statechangearrays(a, b):
+    if len(a) != len(b):
+        return False
     data = all(a.data == b.data)
     t = all(a.t == b.t)
     name = a.name == b.name
@@ -341,6 +345,20 @@ def test_timeserie_rsub():
     return True
 
 
+def test_timeserie_at():
+    a = TimeSerie([1,2,3,4,5,6], t0=1, fs=1, name='a')
+    assert a.at(2) == 2
+    return True
+
+
+def test_timeserie_where():
+    a = TimeSerie([1,2,3,4,5,6], t0=1, fs=1, name='a')
+    d = a.where(a.t >= 3)
+    d_test = np.array([3,4,5,6])
+    assert len(d) == len(d_test)
+    assert all(d == d_test)
+    return True
+
 def test_timeserie_empty():
     a = TimeSerie.empty(1, 10, fs=10, name="a")
     assert len(a) == 90
@@ -471,6 +489,12 @@ def test_statechangearray_init():
     return True
 
 
+def test_statechangearray_len():
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8])
+    assert len(a) == 4
+    return True
+
+
 def test_statechangearray_iter():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8])
     gen = a.iter()
@@ -499,10 +523,20 @@ def test_statechangearray_duration():
     return True
 
 def test_statechangearray_totimeseries():
-
+    a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name='a')
+    ts_a = a.to_timeseries(fs=2)
+    assert compare_timeseries(ts_a, TimeSerie([1,1,3,3,3,3,5,5,5,5,5,5,7], t0=1, fs=2, name='a'))
+    b = StateChangeArray([1, 3, 5, 7], t=[1, 2, 2.25, 4])
+    with pytest.raises(ValueError):
+        ts_b = b.to_timeseries(fs=2)
+    with pytest.raises(NameError):
+        b.to_timeseries(fs=2, method="nonExistingMethod")
+    c = StateChangeArray([1,3,5,7], t=[1,2,4,8], name='c')
+    ts_c = c.to_timeseries(fs=2, method='interpolate')
+    assert compare_timeseries(ts_c, TimeSerie([1, 2, 3, 3.5, 4, 4.5, 5, 5.25, 5.5, 5.75, 6, 6.25, 6.5, 6.75, 7], t0=1, fs=2, name='c'))
     return True
 
-    
+
 def test_statechangearray_isbool():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name='a')
     assert a.is_bool() is False
@@ -536,7 +570,13 @@ def test_report_toevent():
 def test_report_totimeserie():
     a = Report(2, 4, name='a')
     ts_a = a.to_timeserie()
-    assert compare_timeseries(ts_a, TimeSerie([0.,1.,1.,1.,0.], t0=1., fs=1, name='a'))
+    assert compare_timeseries(ts_a, TimeSerie([0.,1.,1.,0.], t0=1., fs=1, name='a'))
+    b = Report(3, 8, name='b')
+    ts_b = b.to_timeserie(fs=4, window=2)
+    cmp_b = TimeSerie([0., 0.] + (20*[1.]) + [0., 0.], t0=2.5, fs=4, name='b')
+    ts_b._reprconfig['threshold'] = 100
+    cmp_b._reprconfig['threshold'] = 100
+    assert compare_timeseries(ts_b, cmp_b)
     return True
 
 

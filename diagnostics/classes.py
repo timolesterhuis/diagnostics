@@ -312,6 +312,12 @@ class TimeSerie(object):
             k += 1
         data = np.zeros(k)
         return cls(data, t0=t0, fs=fs, name=name)
+    
+    def at(self, t):
+        return self.data[np.where(self.t == t)]
+    
+    def where(self, *args, **kwargs):
+        return self.data[np.where(*args, **kwargs)]
 
     @logged()
     def reset_t0(self):
@@ -453,7 +459,7 @@ class BooleanTimeSerie(TimeSerie):
         pass  # TODO: implement creation of BooleanTimeSerie from (multiple) reports. Might use report.to_timeserie() method and then combines multiple timeseries
 
 
-class StateChangeArray(object):  # TODO: assert t is increasing in time (can't jump back in time!)
+class StateChangeArray(object):
     def __init__(self, data, t, name=""):
 
         if len(data) != len(t):
@@ -474,6 +480,9 @@ class StateChangeArray(object):  # TODO: assert t is increasing in time (can't j
         return "StateChangeArray({}, t={}, name={})".format(
             self.data, self.t, repr(self.name)
         )
+    
+    def __len__(self):
+        return self.data.__len__()
 
     def iter(self):
         for t, v in zip(self.t, self.data):
@@ -499,10 +508,10 @@ class StateChangeArray(object):  # TODO: assert t is increasing in time (can't j
     def duration(self):
         return np.diff(self.t)
 
-    def to_timeseries(self, fs, method="default", tol=1e-4, tail=0):
+    def to_timeseries(self, fs, method="default", tol=1e-4, tail=0):  # TODO: fix ! end is not exlusive <-- am i sure of this?
         t0 = self.t[0]
         name = self.name
-        if method == "default":
+        if method == "default":  # TODO: do I want tail or window as a parameter?
             t0 = self.t[0]
             name = self.name
             duration = self.duration()
@@ -548,10 +557,10 @@ class Report(object):
         return (event_t0, event_te)
 
     @logged()
-    def to_timeserie(self, fs=1, window=1):
+    def to_timeserie(self, fs=1, window=1): # TODO: implement tolerance warning/error
         t0 = self.t0 - (window / fs)
         window_data = np.zeros(window)
-        k = round((self.te - t0) * fs)
+        k = round((self.te - self.t0) * fs)
         data = np.ones(k)
         data = np.append(window_data, np.append(data, window_data))
         return TimeSerie(data, t0=t0, fs=fs, name=self.name)
