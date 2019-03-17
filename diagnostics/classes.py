@@ -537,6 +537,19 @@ class StateChangeArray(object):
         return self.data.dtype == np.bool
 
 
+class BooleanStateChangeArray(StateChangeArray):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.data.dtype != np.bool:
+            raise ValueError("data is not of dtype 'bool'")
+
+    def __repr__(self):
+        return "BooleanStateChangeArray({}, t={}, name={})".format(
+            self.data, self.t, repr(self.name)
+        )
+
+
 class Report(object):
     def __init__(self, t0, te, name=""):
 

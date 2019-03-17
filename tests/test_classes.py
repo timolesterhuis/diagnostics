@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from diagnostics import TimeSerie, BooleanTimeSerie, StateChangeArray, Report, Event
+from diagnostics import TimeSerie, BooleanTimeSerie, StateChangeArray, BooleanStateChangeArray, Report, Event
 import datetime as dt
 import pytz
 
