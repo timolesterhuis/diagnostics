@@ -1,5 +1,6 @@
 import numpy as np
 
+from .__version__ import __version__
 
 from .classes import TimeSerie
 from .classes import BooleanTimeSerie
