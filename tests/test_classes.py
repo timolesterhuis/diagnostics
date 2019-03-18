@@ -22,7 +22,7 @@ def compare_statechangearrays(a, b):
     t = all(a.t == b.t)
     name = a.name == b.name
     class_ = type(a) == type(b)
-    return data & t & class_
+    return data & t & name
 
 
 def compare_events(a, b):
@@ -423,7 +423,7 @@ def test_timeserie_tobool():
     return True
 
 
-def test__timeserie_tostatechangearray():
+def test_timeserie_tostatechangearray():
     a = TimeSerie([1, 1, 1, 2, 2, 3, 4, 4, 4], t0=1, fs=2, name="a")
     sta_a = a.to_statechangearray()
     assert compare_statechangearrays(sta_a, StateChangeArray([1,2,3,4], t=[1, 2.5, 3.5, 4], name='a'))
@@ -544,6 +544,29 @@ def test_statechangearray_isbool():
     assert a.is_bool() is False
     a = StateChangeArray([True, False, True, False], t=[1, 2, 4, 7], name='a')
     assert a.is_bool() is True
+
+
+def test_statechangearray_tobool():
+    a = StateChangeArray([0, 1, 0, 2, 0], t=[1, 2, 4, 5, 7], name='a')
+    b = a.to_bool(inplace=False)
+    assert compare_statechangearrays(b, BooleanStateChangeArray([False,True,False,True,False], t=[1,2,4,5,7], name='a'))
+    a.to_bool(inplace=True)
+    assert a.is_bool()
+    assert compare_statechangearrays(a, b)
+    return True
+
+
+def test_booleanstatechangearray_init():
+    a = BooleanStateChangeArray([False, True, False, True, False], [1, 3, 5, 6, 9], name='a')
+    with pytest.raises(ValueError):
+        b = BooleanStateChangeArray([1,2,3,5,8], t=[1,2,4,8,16], name='b')
+    return True
+
+
+def test_booleanstatechangearray_repr():
+    a = BooleanStateChangeArray([False, True, False, True, False], [1, 3, 5, 6, 9], name='a')
+    assert repr(a) == "BooleanStateChangeArray([False  True False  True False], t=[1 3 5 6 9], name='a')"
+    return True
 
 
 def test_report_init():

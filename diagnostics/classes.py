@@ -475,11 +475,11 @@ class StateChangeArray(object):
             raise ValueError("t should be chronilogical!")
         self.t = t
         self.name = name
+        self._reprconfig = {"threshold": 10, "separator": " "}
 
     def __repr__(self):
         return "StateChangeArray({}, t={}, name={})".format(
-            self.data, self.t, repr(self.name)
-        )
+            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name))
     
     def __len__(self):
         return self.data.__len__()
@@ -536,6 +536,12 @@ class StateChangeArray(object):
     def is_bool(self):
         return self.data.dtype == np.bool
 
+    def to_bool(self, inplace=False):
+        data = self.data.astype(np.bool)
+        if inplace:
+            self.data = data
+        else:
+            return BooleanStateChangeArray(data, t=self.t,  name=self.name)
 
 class BooleanStateChangeArray(StateChangeArray):
 
@@ -546,8 +552,7 @@ class BooleanStateChangeArray(StateChangeArray):
 
     def __repr__(self):
         return "BooleanStateChangeArray({}, t={}, name={})".format(
-            self.data, self.t, repr(self.name)
-        )
+            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name))
 
 
 class Report(object):
@@ -570,7 +575,7 @@ class Report(object):
         return (event_t0, event_te)
 
     @logged()
-    def to_timeserie(self, fs=1, window=1): # TODO: implement tolerance warning/error
+    def to_timeserie(self, fs=1, window=1):  # TODO: implement tolerance warning/error
         t0 = self.t0 - (window / fs)
         window_data = np.zeros(window)
         k = round((self.te - self.t0) * fs)
