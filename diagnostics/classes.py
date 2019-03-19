@@ -543,6 +543,140 @@ class StateChangeArray(object):
         else:
             return BooleanStateChangeArray(data, t=self.t,  name=self.name)
 
+    def at(self, t):
+        return self.data[np.where(self.t == t)]
+
+    def where(self, statement):
+        return self.data[np.where(statement)]
+
+    def __getitem__(self, item):
+        return self.data.__getitem__(item)
+
+    def __eq__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return BooleanStateChangeArray(self.data == other.data, t=self.t, name="({} == {})".format(self.name, other.name))
+        else:
+            return BooleanStateChangeArray(self.data == other, t=self.t, name="")
+
+    def __ne__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return BooleanStateChangeArray(self.data != other.data, t=self.t, name="({} != {})".format(self.name, other.name))
+        else:
+            return BooleanStateChangeArray(self.data != other, t=self.t, name="")
+
+    def __lt__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return BooleanStateChangeArray(self.data < other.data, t=self.t, name="({} < {})".format(self.name, other.name))
+        else:
+            return BooleanStateChangeArray(self.data < other, t=self.t, name="")
+
+    def __gt__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return BooleanStateChangeArray(self.data > other.data, t=self.t, name="({} > {})".format(self.name, other.name))
+        else:
+            return BooleanStateChangeArray(self.data > other, t=self.t, name="")
+
+    def __le__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return BooleanStateChangeArray(self.data <= other.data, t=self.t, name="({} <= {})".format(self.name, other.name))
+        else:
+            return BooleanStateChangeArray(self.data <= other, t=self.t, name="")
+
+    def __ge__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return BooleanStateChangeArray(self.data >= other.data, t=self.t, name="({} >= {})".format(self.name, other.name))
+        else:
+            return BooleanStateChangeArray(self.data >= other, t=self.t, name="")
+
+    def __add__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return StateChangeArray(self.data + other.data, t=self.t, name="({} + {})".format(self.name, other.name))
+        else:
+            return StateChangeArray(self.data + other, t=self.t, name="")
+
+    def __radd__(self, other):
+        return StateChangeArray(other + self.data, t=self.t, name="")
+
+    def __sub__(self, other):
+        if isinstance(other, StateChangeArray):
+            if len(self.data) != other.data:
+                raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+            elif any(self.t != other.t):
+                raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+            return StateChangeArray(self.data - other.data, t=self.t, name="({} - {})".format(self.name, other.name))
+        else:
+            return StateChangeArray(self.data - other, t=self.t, name="")
+
+    def __rsub__(self, other):
+        return StateChangeArray(other - self.data, t=self.t, name='')
+
+    def __and__(self, other):
+        if not isinstance(other, StateChangeArray):
+            raise ValueError('Expected StateChangeArray!')
+        if len(self.data) != other.data:
+            raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+        elif any(self.t != other.t):
+            raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+        if not (self.is_bool() and other.is_bool()):
+            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
+        return StateChangeArray(self.data & other.data, t=self.t, name="({} & {})".format(self.name, other.name))
+
+    def __or__(self, other):
+        if not isinstance(other, StateChangeArray):
+            raise ValueError('Expected StateChangeArray!')
+        if len(self.data) != other.data:
+            raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+        elif any(self.t != other.t):
+            raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+        if not (self.is_bool() and other.is_bool()):
+            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
+        return StateChangeArray(self.data | other.data, t=self.t, name="({} | {})".format(self.name, other.name))
+
+    def __xor__(self, other):
+        if not isinstance(other, StateChangeArray):
+            raise ValueError('Expected StateChangeArray!')
+        if len(self.data) != other.data:
+            raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
+        elif any(self.t != other.t):
+            raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
+        if not (self.is_bool() and other.is_bool()):
+            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
+        return StateChangeArray(self.data ^ other.data, t=self.t, name="({} ^ {})".format(self.name, other.name))
+
+    def __invert__(self):
+        if not self.is_bool():
+            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArray!")
+        return StateChangeArray(~self.data, t=self.t, name="(~{})".format(self.name))
+
+
 class BooleanStateChangeArray(StateChangeArray):
 
     def __init__(self, *args, **kwargs):
