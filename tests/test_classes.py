@@ -487,7 +487,9 @@ def test_statechangearray_init():
     with pytest.raises(ValueError):
         e = StateChangeArray([1,2,3,4], [1, 5, 3, 8], name='e')
     with pytest.raises(ValueError):
-        f  = StateChangeArray([1,2,2,3], [1,2,4,7], name='f')
+        f = StateChangeArray([1,2,2,3], [1,2,4,7], name='f')
+    g = StateChangeArray([1,2,2,3], [1,2,4,7], name='g', shrink=True)
+    assert compare_statechangearrays(g, StateChangeArray([1,2,3], [1,2,7], name='g'))
     return True
 
 

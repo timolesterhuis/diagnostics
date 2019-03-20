@@ -460,19 +460,36 @@ class BooleanTimeSerie(TimeSerie):
 
 
 class StateChangeArray(object):
-    def __init__(self, data, t, name=""):
+    def __init__(self, data, t, name="", shrink=False):
 
         if len(data) != len(t):
             raise ValueError("data & t should be of the same length")
+
         if not isinstance(data, np.ndarray):
             data = np.array(data)
-        if any(data[1:] == data[:-1]):
-            raise ValueError("There was a jump where no state-change happend!")
-        self.data = data
+
         if not isinstance(t, np.ndarray):
             t = np.array(t)
+
+        if any(data[1:] == data[:-1]):
+            if not shrink:
+                raise ValueError("There was a jump where no state-change happend!")
+            else:
+                state = None
+                new_t = []
+                new_d = []
+                for t, d in zip(t, data):
+                    if state != d:
+                        state = d
+                        new_t.append(t)
+                        new_d.append(d)
+                t = np.array(new_t)
+                data = np.array(new_d)
+
         if any(np.diff(t) < 0):
             raise ValueError("t should be chronilogical!")
+
+        self.data = data
         self.t = t
         self.name = name
         self._reprconfig = {"threshold": 10, "separator": " "}
@@ -638,16 +655,54 @@ class StateChangeArray(object):
     def __rsub__(self, other):
         return StateChangeArray(other - self.data, t=self.t, name='')
 
+    def _combine(self, other):
+        if not isinstance(other, StateChangeArray):
+            raise ValueError('Expected StateChangeArray!')
+        # TODO: fix return StateChangeArray
+        left = self.iter()
+        right = other.iter()
+        next_items = dict(left=None, right=None)
+        next_items['left'] = next(left)
+        next_items['right'] = next(right)
+        state = dict(left=None, right=None)
+        t = None
+        new_t = []
+        new_data = []
+        exhausted = dict(left=False, right=False)
+        while True:
+            if next_items.get('left', (np.inf,))[0] <= next_items.get('right', (np.inf,))[0]:
+                try:
+                    t, d = next_items.pop('left')
+                    state['left'] = d
+                    next_items['left'] = next(left)
+                except StopIteration:
+                    exhausted['left'] = True
+
+            elif next_items.get('right', (np.inf,))[0] < next_items.get('left', (np.inf,))[0]:
+                try:
+                    t, d = next_items.pop('right')
+                    state['right'] = d
+                    next_items['right'] = next(right)
+                except StopIteration:
+                    exhausted['right'] = True
+
+            new_t.append(t)
+            new_data.append(state.copy())
+
+            if all(exhausted.values()):
+                break
+        return new_t, new_data
+
     def __and__(self, other):
         if not isinstance(other, StateChangeArray):
             raise ValueError('Expected StateChangeArray!')
-        if len(self.data) != other.data:
-            raise ValueError("data arrays are of inconsistent length! ({} & {})".format(self, other))
-        elif any(self.t != other.t):
-            raise ValueError("time arrays are inconsistent! ({} & {})".format(self, other))
         if not (self.is_bool() and other.is_bool()):
             raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
-        return StateChangeArray(self.data & other.data, t=self.t, name="({} & {})".format(self.name, other.name))
+        new_t, new_data = self._combine(other)
+        arrays = [(t, d['left'] & d['right']) for t, d in zip(new_t, new_data) if None not in d.values()]
+        data = [d for t, d in arrays]
+        t = [t for t, d in arrays]
+        return BooleanStateChangeArray(data, t=t, name="({} & {})".format(self.name, other.name), shrink=True)
 
     def __or__(self, other):
         if not isinstance(other, StateChangeArray):
