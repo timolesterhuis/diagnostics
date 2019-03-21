@@ -588,7 +588,7 @@ def test_statechangearray_or():
     assert compare_statechangearrays(
         a_and_b,
         BooleanStateChangeArray(
-            [True, False, True, False], t=[3, 5, 6, 9], name="(a | b)"
+            [True, False, True, False], t=[2, 5, 6, 9], name="(a | b)"
         ),
     )
     a_and_a = a | a

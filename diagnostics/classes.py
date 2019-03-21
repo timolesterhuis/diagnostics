@@ -625,9 +625,7 @@ class StateChangeArray(object):
         data = []
         new_t = []
         for t, state in states.items():
-            if None in state:
-                continue
-            data.append(state[0] | state[1])
+            data.append(state[0] or False | state[1] or False)
             new_t.append(t)
         return BooleanStateChangeArray(
             data, t=new_t, name="({} | {})".format(self.name, other.name), shrink=True
