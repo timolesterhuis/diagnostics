@@ -633,6 +633,10 @@ def test_statechangearray_invert():
             [False, True, False, True], t=[2, 4, 6, 8], name="(~a)"
         ),
     )
+    with pytest.raises(ValueError):
+        b = StateChangeArray([1,2,3,4], t=[2, 4, 6, 8], name="b")
+        not_b = ~b
+    return True
 
 
 def test_statechangearray_duration():
