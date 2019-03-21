@@ -570,75 +570,70 @@ class StateChangeArray(object):
         return self.data.__getitem__(item)
 
     def _combine(self, other):
-        if not isinstance(other, StateChangeArray):
-            raise ValueError('Expected StateChangeArray!')
-        # TODO: fix return StateChangeArray
-        left = self.iter()
-        right = other.iter()
-        next_items = dict(left=None, right=None)
-        next_items['left'] = next(left)
-        next_items['right'] = next(right)
-        state = dict(left=None, right=None)
-        t = None
-        new_t = []
-        new_data = []
-        exhausted = dict(left=False, right=False)
-        while True:
-            if next_items.get('left', (np.inf,))[0] <= next_items.get('right', (np.inf,))[0]:
-                try:
-                    t, d = next_items.pop('left')
-                    state['left'] = d
-                    next_items['left'] = next(left)
-                except StopIteration:
-                    exhausted['left'] = True
+        left = self.to_events()
+        right = other.to_events()
+        left_t = [e.t for e in left]
+        right_t = [e.t for e in right]
+        times = sorted(left_t + right_t)
+        state = (None, None)
+        data = dict()
+        for t in times:
+            if left:
+                if t == left[0].t:
+                    e = left.pop(0)
+                    state = (e.value, state[1])
+            if right:
+                if t == right[0].t:
+                    e = right.pop(0)
+                    state = (state[0], e.value)
+            data[t] = state
+        return data
 
-            elif next_items.get('right', (np.inf,))[0] < next_items.get('left', (np.inf,))[0]:
-                try:
-                    t, d = next_items.pop('right')
-                    state['right'] = d
-                    next_items['right'] = next(right)
-                except StopIteration:
-                    exhausted['right'] = True
-
-            new_t.append(t)
-            new_data.append(state.copy())
-
-            if all(exhausted.values()):
-                break
-        return new_t, new_data
 
     def __and__(self, other):
         if not isinstance(other, StateChangeArray):
             raise ValueError('Expected StateChangeArray!')
         if not (self.is_bool() and other.is_bool()):
             raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
-        new_t, new_data = self._combine(other)
-        arrays = [(t, d['left'] & d['right']) for t, d in zip(new_t, new_data) if None not in d.values()]
-        data = [d for t, d in arrays]
-        t = [t for t, d in arrays]
-        return BooleanStateChangeArray(data, t=t, name="({} & {})".format(self.name, other.name), shrink=True)
+        states = self._combine(other)
+        data = []
+        new_t = []
+        for t, state in states.items():
+            if None in state:
+                continue
+            data.append(state[0] & state[1])
+            new_t.append(t)
+        return BooleanStateChangeArray(data, t=new_t, name="({} & {})".format(self.name, other.name), shrink=True)
 
     def __or__(self, other):
         if not isinstance(other, StateChangeArray):
             raise ValueError('Expected StateChangeArray!')
         if not (self.is_bool() and other.is_bool()):
             raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
-        new_t, new_data = self._combine(other)
-        arrays = [(t, d['left'] | d['right']) for t, d in zip(new_t, new_data) if None not in d.values()]
-        data = [d for t, d in arrays]
-        t = [t for t, d in arrays]
-        return BooleanStateChangeArray(data, t=t, name="({} | {})".format(self.name, other.name), shrink=True)
+        states = self._combine(other)
+        data = []
+        new_t = []
+        for t, state in states.items():
+            if None in state:
+                continue
+            data.append(state[0] | state[1])
+            new_t.append(t)
+        return BooleanStateChangeArray(data, t=new_t, name="({} | {})".format(self.name, other.name), shrink=True)
 
     def __xor__(self, other):
         if not isinstance(other, StateChangeArray):
             raise ValueError('Expected StateChangeArray!')
         if not (self.is_bool() and other.is_bool()):
             raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
-        new_t, new_data = self._combine(other)
-        arrays = [(t, d['left'] ^ d['right']) for t, d in zip(new_t, new_data) if None not in d.values()]
-        data = [d for t, d in arrays]
-        t = [t for t, d in arrays]
-        return BooleanStateChangeArray(data, t=t, name="({} ^ {})".format(self.name, other.name), shrink=True)
+        states = self._combine(other)
+        data = []
+        new_t = []
+        for t, state in states.items():
+            if None in state:
+                continue
+            data.append(state[0] ^ state[1])
+            new_t.append(t)
+        return BooleanStateChangeArray(data, t=new_t, name="({} ^ {})".format(self.name, other.name), shrink=True)
 
     def __invert__(self):
         if not self.is_bool():
