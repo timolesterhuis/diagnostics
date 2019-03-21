@@ -23,7 +23,7 @@ cd diagnostics
 python setup.py install
 ```
 
-Usase
+Usage
 -----
 
 #### TimeSeries
@@ -70,7 +70,7 @@ battery_life = ds.TimeSerie(np.arange(100, 0, -0.01),
 Now we've got our battery life set to a specific day,
 and gave it a name. Both will come in handy later.
 
-####BooleanTimeSeries
+#### BooleanTimeSeries
 
 Let's be honest, the battery percentage of your phone does not really matter to you,
 unless it goes below a certain threshold. 
