@@ -83,7 +83,8 @@ class TimeSerie(object):
 
     def __repr__(self):
         return "TimeSerie({}, t0={}, name={}, fs={})".format(
-            np.array2string(self.data, **self._reprconfig), *map(repr, [self.t0, self.name, self.fs])
+            np.array2string(self.data, **self._reprconfig),
+            *map(repr, [self.t0, self.name, self.fs])
         )
 
     #        return "TimeSerie({}, t0={}, name={}, fs={})".format(np.array2str(self.data, threshold=self._threshold), *map(repr, [self.t0, self.name, self.fs]))
@@ -312,10 +313,10 @@ class TimeSerie(object):
             k += 1
         data = np.zeros(k)
         return cls(data, t0=t0, fs=fs, name=name)
-    
+
     def at(self, t):
         return self.data[np.where(self.t == t)]
-    
+
     def where(self, *args, **kwargs):
         return self.data[np.where(*args, **kwargs)]
 
@@ -496,8 +497,9 @@ class StateChangeArray(object):
 
     def __repr__(self):
         return "StateChangeArray({}, t={}, name={})".format(
-            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name))
-    
+            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name)
+        )
+
     def __len__(self):
         return self.data.__len__()
 
@@ -525,7 +527,9 @@ class StateChangeArray(object):
     def duration(self):
         return np.diff(self.t)
 
-    def to_timeseries(self, fs, method="default", tol=1e-4, tail=0):  # TODO: fix ! end is not exlusive <-- am i sure of this?
+    def to_timeseries(
+        self, fs, method="default", tol=1e-4, tail=0
+    ):  # TODO: fix ! end is not exlusive <-- am i sure of this?
         t0 = self.t[0]
         name = self.name
         if method == "default":  # TODO: do I want tail or window as a parameter?
@@ -558,10 +562,12 @@ class StateChangeArray(object):
         if inplace:
             self.data = data
         else:
-            return BooleanStateChangeArray(data, t=self.t,  name=self.name)
+            return BooleanStateChangeArray(data, t=self.t, name=self.name)
 
     def at(self, t):
-        return self.data[np.where(self.t == t)] # THINKOF: find in-between changes values?
+        return self.data[
+            np.where(self.t == t)
+        ]  # THINKOF: find in-between changes values?
 
     def where(self, statement):
         return self.data[np.where(statement)]
@@ -589,12 +595,13 @@ class StateChangeArray(object):
             data[t] = state
         return data
 
-
     def __and__(self, other):
         if not isinstance(other, StateChangeArray):
-            raise ValueError('Expected StateChangeArray!')
+            raise ValueError("Expected StateChangeArray!")
         if not (self.is_bool() and other.is_bool()):
-            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
+            raise ValueError(
+                "Can't perform bitwise operation on non-boolean StateChangeArrays!"
+            )
         states = self._combine(other)
         data = []
         new_t = []
@@ -603,13 +610,17 @@ class StateChangeArray(object):
                 continue
             data.append(state[0] & state[1])
             new_t.append(t)
-        return BooleanStateChangeArray(data, t=new_t, name="({} & {})".format(self.name, other.name), shrink=True)
+        return BooleanStateChangeArray(
+            data, t=new_t, name="({} & {})".format(self.name, other.name), shrink=True
+        )
 
     def __or__(self, other):
         if not isinstance(other, StateChangeArray):
-            raise ValueError('Expected StateChangeArray!')
+            raise ValueError("Expected StateChangeArray!")
         if not (self.is_bool() and other.is_bool()):
-            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
+            raise ValueError(
+                "Can't perform bitwise operation on non-boolean StateChangeArrays!"
+            )
         states = self._combine(other)
         data = []
         new_t = []
@@ -618,13 +629,17 @@ class StateChangeArray(object):
                 continue
             data.append(state[0] | state[1])
             new_t.append(t)
-        return BooleanStateChangeArray(data, t=new_t, name="({} | {})".format(self.name, other.name), shrink=True)
+        return BooleanStateChangeArray(
+            data, t=new_t, name="({} | {})".format(self.name, other.name), shrink=True
+        )
 
     def __xor__(self, other):
         if not isinstance(other, StateChangeArray):
-            raise ValueError('Expected StateChangeArray!')
+            raise ValueError("Expected StateChangeArray!")
         if not (self.is_bool() and other.is_bool()):
-            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArrays!")
+            raise ValueError(
+                "Can't perform bitwise operation on non-boolean StateChangeArrays!"
+            )
         states = self._combine(other)
         data = []
         new_t = []
@@ -633,16 +648,19 @@ class StateChangeArray(object):
                 continue
             data.append(state[0] ^ state[1])
             new_t.append(t)
-        return BooleanStateChangeArray(data, t=new_t, name="({} ^ {})".format(self.name, other.name), shrink=True)
+        return BooleanStateChangeArray(
+            data, t=new_t, name="({} ^ {})".format(self.name, other.name), shrink=True
+        )
 
     def __invert__(self):
         if not self.is_bool():
-            raise ValueError("Can't perform bitwise operation on non-boolean StateChangeArray!")
+            raise ValueError(
+                "Can't perform bitwise operation on non-boolean StateChangeArray!"
+            )
         return StateChangeArray(~self.data, t=self.t, name="(~{})".format(self.name))
 
 
 class BooleanStateChangeArray(StateChangeArray):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.data.dtype != np.bool:
@@ -650,7 +668,8 @@ class BooleanStateChangeArray(StateChangeArray):
 
     def __repr__(self):
         return "BooleanStateChangeArray({}, t={}, name={})".format(
-            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name))
+            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name)
+        )
 
 
 class Report(object):
