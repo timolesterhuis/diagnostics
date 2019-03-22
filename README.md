@@ -1,5 +1,5 @@
-![*Designed by Freepik from www.flaticon.com*](https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png)
-<!-- -->
+![*Designed by Freepik from www.flaticon.com*](https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png =36*36)
+<!--*Designed by Freepik from www.flaticon.com*-->
 Diagnostics - a toolbox built on numpy for analyzing diagnostic data!
 
 
