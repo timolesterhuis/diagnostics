@@ -20,7 +20,14 @@ Alternatively, you can clone the repository and use `setup.py` to install:
 ```bash
 git clone https://github.com/tim00w/diagnostics.git
 cd diagnostics
-python setup.py ins
+python setup.py install
+```
+
+Usage
+-----
+
+#### TimeSeries
+
 Diagnostic events are derived from from real occurances. 
 For instance, your phone will probably generate a message (event) 
 if your battery is running low (percentage below threshold value).
@@ -63,7 +70,7 @@ battery_life = ds.TimeSerie(np.arange(100, 0, -0.01),
 Now we've got our battery life set to a specific day,
 and gave it a name. Both will come in handy later.
 
-####BooleanTimeSeries
+#### BooleanTimeSeries
 
 Let's be honest, the battery percentage of your phone does not really matter to you,
 unless it goes below a certain threshold. 
