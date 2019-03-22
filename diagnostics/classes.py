@@ -469,7 +469,10 @@ class StateChangeArray(object):
         if not isinstance(data, np.ndarray):
             data = np.array(data)
 
-        if not isinstance(t, np.ndarray):  # TODO: implement t being a list of datetimes or a datetimearray
+        if isinstance(t[0], datetime.datetime):
+            t = [ti.timestamp() for ti in t]
+
+        if not isinstance(t, np.ndarray):  # TODO: implement t being a datetimearray
             t = np.array(t)
 
         if any(data[1:] == data[:-1]):
