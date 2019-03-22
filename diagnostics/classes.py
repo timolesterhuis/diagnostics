@@ -358,17 +358,19 @@ class TimeSerie(object):
     def plot(self, **kwargs):
         show = kwargs.get('show', True)
         as_dt = kwargs.get('as_dt', False)
-
+        ylabel = kwargs.get('ylabel', '')
         f = plt.figure()
         ax = f.add_subplot(111)
         ax.set_title("TimeSerie")
         if as_dt:
-            ax.set_xlabel('datetime [utc]')
             timeaxis = self.dt
+            xlabel = kwargs.get('xlabel', 'datetime [utc]')
         else:
-            ax.set_xlabel('time [s]')
+            xlabel = kwargs.get('xlabel', 'time [s]')
             timeaxis = self.t
 
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
         lines = ax.plot(timeaxis, self.data, label=self.name)
         ax.legend()
         if show:
