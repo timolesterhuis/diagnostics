@@ -339,15 +339,41 @@ class TimeSerie(object):
     def te(self):  # TODO: optimize this function
         return self.t[-1]
 
+    @property
+    def dt(self):
+        return np.array([datetime.datetime.fromtimestamp(t) for t in self.t], dtype='datetime64')
+
+    @property
+    def dt0(self):
+        return datetime.datetime.fromtimestamp(self.t0)
+
+    @property
+    def dte(self):
+        return datetime.datetime.fromtimestamp(self.te)
+
     def iter(self):
         for t, v in zip(self.t, self.data):
             yield t, v
 
     def plot(self, **kwargs):
-        show = kwargs.pop("show", True)
-        plt.plot(self._t(), self.data, label=self.name, **kwargs)
+        show = kwargs.get('show', True)
+        as_dt = kwargs.get('as_dt', False)
+
+        f = plt.figure()
+        ax = f.add_subplot(111)
+        ax.set_title("TimeSerie")
+        if as_dt:
+            ax.set_xlabel('datetime [utc]')
+            timeaxis = self.dt
+        else:
+            ax.set_xlabel('time [s]')
+            timeaxis = self.t
+
+        lines = ax.plot(timeaxis, self.data, label=self.name)
+        ax.legend()
         if show:
-            plt.show()  # TODO: this freezes the terminal
+            f.show()
+        return f, ax, lines
 
     def to_channel(self, c):
         if self.fs != c.fs:
