@@ -1,6 +1,4 @@
-![*Designed by Freepik from www.flaticon.com*](https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png =36x36)
-<!--*Designed by Freepik from www.flaticon.com*-->
-Diagnostics - a toolbox built on numpy for analyzing diagnostic data!
+## <img src="https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png" alt="*Designed by Freepik from www.flaticon.com*" width="50" height="50" />  Diagnostics - a toolbox built for analyzing diagnostic data!
 
 
 [![Build Status](https://travis-ci.org/tim00w/diagnostics.svg?branch=master)](https://travis-ci.org/tim00w/diagnostics)
