@@ -503,6 +503,9 @@ def test_statechangearray_init():
     assert compare_statechangearrays(
         g, StateChangeArray([1, 2, 3], [1, 2, 7], name="g")
     )
+    h = StateChangeArray([1, 3], t=[pytz.utc.localize(dt.datetime(2019, 1, 1, 8)),
+                                    pytz.utc.localize(dt.datetime(2019, 1, 1, 9))])
+    assert all(h.t == [1546329600.0, 1546333200.0])
     return True
 
 
