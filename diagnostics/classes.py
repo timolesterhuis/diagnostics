@@ -341,15 +341,15 @@ class TimeSerie(object):
 
     @property
     def dt(self):
-        return np.array([datetime.datetime.fromtimestamp(t) for t in self.t], dtype='datetime64')
+        return np.array([datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()], dtype='datetime64')
 
     @property
     def dt0(self):
-        return datetime.datetime.fromtimestamp(self.t0)
+        return datetime.datetime.utcfromtimestamp(self.t0)
 
     @property
     def dte(self):
-        return datetime.datetime.fromtimestamp(self.te)
+        return datetime.datetime.utcfromtimestamp(self.te)
 
     def iter(self):
         for t, v in zip(self.t, self.data):
@@ -359,7 +359,7 @@ class TimeSerie(object):
         show = kwargs.get('show', True)
         as_dt = kwargs.get('as_dt', False)
         ylabel = kwargs.get('ylabel', '')
-        f = plt.figure()
+        f = plt.figure(frameon=False)
         ax = f.add_subplot(111)
         ax.set_title("TimeSerie")
         if as_dt:
@@ -373,7 +373,7 @@ class TimeSerie(object):
         ax.set_ylabel(ylabel)
         lines = ax.plot(timeaxis, self.data, label=self.name)
         ax.legend()
-        if show:
+        if show:  # pragma: no cover
             f.show()
         return f, ax, lines
 

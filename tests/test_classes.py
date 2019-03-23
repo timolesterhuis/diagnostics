@@ -62,6 +62,10 @@ def test_timeserie_datetime_t0():
         [1, 2, 3], t0=pytz.utc.localize(dt.datetime(2000, 1, 1)), fs=1, name="a"
     )
     assert a.t0 == 946684800.0
+    assert a.te == 946684802.0
+    assert a.dt0 == dt.datetime(2000, 1, 1)
+    assert a.dte == dt.datetime(2000, 1, 1, 0, 0, 2)
+    assert all(a.dt == np.array(['2000-01-01T00:00:00', '2000-01-01T00:00:01', '2000-01-01T00:00:02'], dtype='datetime64'))
     return True
 
 
@@ -383,6 +387,14 @@ def test_timeserie_empty():
         inclusive=True,
     )
     assert c.te - c.t0 == 3600.0
+    return True
+
+
+def test_timeserie_plot():
+    a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=1)
+    f, ax, lines = a.plot(show=False)
+
+    f, ax, lines = a.plot(as_dt=True, show=False)
     return True
 
 
