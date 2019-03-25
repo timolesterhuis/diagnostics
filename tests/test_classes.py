@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import pytest
 from diagnostics import (
     TimeSerie,
@@ -391,6 +392,7 @@ def test_timeserie_empty():
 
 
 def test_timeserie_plot():
+    plt.ioff()
     a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=1)
     f, ax, lines = a.plot(show=False)
 
