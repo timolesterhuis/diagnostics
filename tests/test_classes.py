@@ -392,7 +392,7 @@ def test_timeserie_empty():
 
 def test_timeserie_plot():
     a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=1)
-    f, ax, lines = a.plot(show=False)
+    #f, ax, lines = a.plot(show=False)
 
     f, ax, lines = a.plot(as_dt=True, show=False)
     return True
