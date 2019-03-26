@@ -548,7 +548,7 @@ class StateChangeArray(object):
                     raise ValueError("Events are not ordered chronically!")
             t.append(e.t)
             data.append(e.value)
-        return cls(data=data, t=t, name=e.name)
+        return cls(data=data, t=t, name=e.name)  # THINKOF: I do not check for consistency in e.name
     
     @classmethod
     def from_reports(cls, reports):
@@ -562,11 +562,11 @@ class StateChangeArray(object):
             if t:
                 if not t0 > t[-1]:
                     raise ValueError("Reports are not ordered chronically!")
-                t.append(t0)
-                data.append(True)
-                t.append(te)
-                data.append(False)
-        return cls(data=data, t=t, name=r.name)
+            t.append(t0)
+            data.append(True)
+            t.append(te)
+            data.append(False)
+        return cls(data=data, t=t, name=r.name)  # THINKOF: I do not check for consistency in r.name
 
 
     def events(self):

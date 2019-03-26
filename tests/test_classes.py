@@ -552,6 +552,34 @@ def test_statechangearray_events():
     return True
 
 
+def test_statechangearray_fromevents():
+    a1 = Event(1, t=1, name='a')
+    a2 = Event(3, t=2, name='a')
+    a3 = Event(5, t=4, name='a')
+    a4 = Event(7, t=8, name='a')
+    a = StateChangeArray.from_events([a1, a2, a3, a4])
+    assert compare_statechangearrays(a, StateChangeArray([1,3,5,7],t=[1,2,4,8],name='a'))
+    a5 = Event(9, t=6, name='a')
+    with pytest.raises(ValueError):
+        b = StateChangeArray.from_events([a1,a2,a3,a4,a5])
+    return True
+
+
+def test_statechangearray_fromreports():
+    a1 = Report(t0=2, te=4, name='a')
+    a2 = Report(t0=6, te=8, name='a')
+    a = StateChangeArray.from_reports([a1, a2])
+    assert compare_statechangearrays(a, StateChangeArray([True,False,True,False], t=[2,4,6,8],name='a'))
+    a3 = Report(t0=12, te=13, name='a')
+    a3.te = 10  # this is a hacky way to test errors in the from_reports() method
+    with pytest.raises(ValueError):
+        b = StateChangeArray.from_reports([a1, a2, a3])
+    a4 = Report(t0=5, te=10, name='a')
+    with pytest.raises(ValueError):
+        c = StateChangeArray.from_reports([a1,a2,a4])
+    return True
+
+
 def test_statechangearray_at():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name="a")
     a_at = a.at(2)
