@@ -731,7 +731,7 @@ class StateChangeArray(object):
             xlabel = "time [s]"
 
         if style == "block":
-            drawstyle = "steps-pre"
+            drawstyle = "steps-post"
         else:
             drawstyle = None
 

@@ -542,6 +542,42 @@ def test_statechangearray_iter():
     return True
 
 
+def test_statechangearray_dt():
+    a = StateChangeArray([1, 3, 5, 7, 9],
+                         t=[pytz.utc.localize(dt.datetime(2019,1,1,0)),
+                            pytz.utc.localize(dt.datetime(2019,1,1,1)),
+                            pytz.utc.localize(dt.datetime(2019,1,1,3)),
+                            pytz.utc.localize(dt.datetime(2019,1,1,6)),
+                            pytz.utc.localize(dt.datetime(2019,1,1,12))],
+                         name='a')
+    assert all(a.dt == np.array(['2019-01-01T00:00:00.000000',
+                                 '2019-01-01T01:00:00.000000',
+                                 '2019-01-01T03:00:00.000000',
+                                 '2019-01-01T06:00:00.000000',
+                                 '2019-01-01T12:00:00.000000'], dtype='datetime64'))
+    return True
+
+
+def test_statechangearray_plot():
+    plt.ioff()
+    a = StateChangeArray([-2, -1, 0, 1, 2, 3, 4, 5], t=[0, 1, 2, 3, 4, 5, 8, 10], name="a")
+    f, ax, lines = a.plot(show=False)
+
+    f, ax, lines = a.plot(show=False, style="nostyle")
+
+    b = StateChangeArray([-2, -1, 0, 1, 2, 3, 4, 5],
+                         t=[dt.datetime(2019, 1, 1, 0),
+                            dt.datetime(2019, 1, 1, 1),
+                            dt.datetime(2019, 1, 1, 3),
+                            dt.datetime(2019, 1, 1, 6),
+                            dt.datetime(2019, 1, 1, 7),
+                            dt.datetime(2019, 1, 1, 8),
+                            dt.datetime(2019, 1, 1, 10),
+                            dt.datetime(2019, 1, 1, 11)], name="b")
+    f, ax, lines = b.plot(as_dt=True, show=False)
+    return True
+
+
 def test_statechangearray_events():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8], name="a")
     e1, e2, e3, e4 = a.to_events()
