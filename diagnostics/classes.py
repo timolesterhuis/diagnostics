@@ -736,6 +736,9 @@ class Report(object):
         self.te = te
         self.name = name
 
+    def __repr__(self):
+        return "Report(t0={}, te={}, name={})".format(*map(repr, [self.t0, self.te, self.name]))
+
     @logged()
     def to_events(self):
         event_t0 = Event(1, t=self.t0, name=self.name)
