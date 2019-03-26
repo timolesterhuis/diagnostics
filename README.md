@@ -14,7 +14,7 @@ The diagnostics library is tested on python 3.7. However, it should run on pytho
 You can install the library using `pip`:
 
 ```bash
-pip install pip install git+https://github.com/tim00w/diagnostics.git
+pip install git+https://github.com/tim00w/diagnostics.git
 ```
 
 Alternatively, you can clone the repository and use `setup.py` to install:

@@ -489,6 +489,7 @@ class BooleanTimeSerie(TimeSerie):
 
 
 class StateChangeArray(object):
+
     def __init__(self, data, t, name="", shrink=False):
 
         if len(data) != len(t):
@@ -531,6 +532,10 @@ class StateChangeArray(object):
             np.array2string(self.data, **self._reprconfig), self.t, repr(self.name)
         )
 
+    @property
+    def dt(self):
+        return np.array([datetime.datetime.utcfromtimestamp(t_) for t_ in self.t], dtype='datetime64')
+
     def __len__(self):
         return self.data.__len__()
 
@@ -540,7 +545,7 @@ class StateChangeArray(object):
 
     @classmethod
     def from_events(cls, events):
-        data = []  #THINKOF: sorting chronically
+        data = []
         t = []
         for e in events:
             if t:
@@ -567,7 +572,6 @@ class StateChangeArray(object):
             t.append(te)
             data.append(False)
         return cls(data=data, t=t, name=r.name)  # THINKOF: I do not check for consistency in r.name
-
 
     def events(self):
         for t, v in self.iter():
@@ -709,6 +713,35 @@ class StateChangeArray(object):
                 "Can't perform bitwise operation on non-boolean StateChangeArray!"
             )
         return StateChangeArray(~self.data, t=self.t, name="(~{})".format(self.name))
+
+    def plot(self, **kwargs):
+        show = kwargs.get('show', True)
+        as_dt = kwargs.get('as_dt', False)
+        style = kwargs.get("style", 'block')
+        ylabel = kwargs.get('ylabel', '')
+        f = plt.figure(frameon=False)
+        ax = f.add_subplot(111)
+        ax.set_title("StateChangeArray")
+
+        if as_dt:
+            timeaxis = self.dt
+            xlabel = "datetime [utc]"
+        else:
+            timeaxis = self.t
+            xlabel = "time [s]"
+
+        if style == "block":
+            drawstyle = "steps-pre"
+        else:
+            drawstyle = None
+
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        lines = ax.plot(timeaxis, self.data, label=self.name, drawstyle=drawstyle)
+        ax.legend()
+        if show:  # pragma: no cover
+            f.show()
+        return f, ax, lines
 
 
 class BooleanStateChangeArray(StateChangeArray):
