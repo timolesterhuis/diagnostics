@@ -630,6 +630,24 @@ def test_statechangearray_where():
     return True
 
 
+def test_statechangearray_state():
+    a = StateChangeArray([True,False,True,False], t=[2,4,6,8], name="a")
+    assert a.state() == False
+    assert a.state(2) == True
+    assert a.state(3) == True
+    assert a.state(3.9) == True
+    assert a.state(4) == False
+    with pytest.raises(IndexError):
+        a.state(1)
+    b = StateChangeArray([1,3,7,9], t=[2,4,6,8], name="b")
+    assert b.state() == 9
+    assert b.state(2) == 1
+    assert b.state(3) == 1
+    assert b.state(3.9) == 1
+    assert b.state(4) == 3
+    return True
+
+
 def test_statechangearray_getitem():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name="a")
     assert a[1] == 3

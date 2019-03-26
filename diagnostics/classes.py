@@ -624,10 +624,18 @@ class StateChangeArray(object):
     def at(self, t):
         return self.data[
             np.where(self.t == t)
-        ]  # THINKOF: find in-between changes values?
+        ]
 
     def where(self, statement):
         return self.data[np.where(statement)]
+
+    def state(self, t=None):
+        if t:
+            return self.data[
+                np.where(self.t <= t)[0][-1]
+            ]
+        else:
+            return self.data[-1]
 
     def __getitem__(self, item):
         return self.data.__getitem__(item)
