@@ -391,7 +391,7 @@ class TimeSerie(object):
                 "channel data window does not fully overlap! (c.te < self.te)"
             )
         # TODO: check that self.t0 and c_t0 can be exact t values for given fs
-        self.t0 - c.t0 * fs % 1
+        self.t0 - c.t0 * self.fs % 1
         # TODO: modify data
 
     @logged()
@@ -540,12 +540,34 @@ class StateChangeArray(object):
 
     @classmethod
     def from_events(cls, events):
-        data = []
+        data = []  #THINKOF: sorting chronically
         t = []
         for e in events:
-            data.append(e.value)
+            if t:
+                if e.t < t[-1]:
+                    raise ValueError("Events are not ordered chronically!")
             t.append(e.t)
+            data.append(e.value)
         return cls(data=data, t=t, name=e.name)
+    
+    @classmethod
+    def from_reports(cls, reports):
+        data = []
+        t = []
+        for r in reports:
+            t0 = r.t0
+            te = r.te
+            if te < t0:
+                raise ValueError("te is before t0 for report!")
+            if t:
+                if not t0 > t[-1]:
+                    raise ValueError("Reports are not ordered chronically!")
+                t.append(t0)
+                data.append(True)
+                t.append(te)
+                data.append(False)
+        return cls(data=data, t=t, name=r.name)
+
 
     def events(self):
         for t, v in self.iter():
