@@ -65,7 +65,7 @@ from datetime import datetime
 
 battery_life = ds.TimeSerie(np.arange(100, 0, -0.01), 
                             fs=1,
-                            t0=datetime(2019,1,1,8,5), # 2018-01-01 08:05
+                            t0=datetime(2019,1,1,8,5), # 2019-01-01 08:05
                             name='battery life')
 ```
 
