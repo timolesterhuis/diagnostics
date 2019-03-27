@@ -637,14 +637,19 @@ def test_statechangearray_state():
     assert a.state(3) == True
     assert a.state(3.9) == True
     assert a.state(4) == False
-    with pytest.raises(IndexError):
-        a.state(1)
+    assert a.state(1) == None
     b = StateChangeArray([1,3,7,9], t=[2,4,6,8], name="b")
     assert b.state() == 9
     assert b.state(2) == 1
     assert b.state(3) == 1
     assert b.state(3.9) == 1
     assert b.state(4) == 3
+    c = StateChangeArray([True, False,True,False],
+                         t=[dt.datetime(2019, 1, 1, 8),
+                            dt.datetime(2019, 1, 1, 9),
+                            dt.datetime(2019, 1, 1, 11),
+                            dt.datetime(2019, 1, 1, 13),], name="c")
+    assert c.state(dt.datetime(2019,1,1,8,30)) == True
     return True
 
 

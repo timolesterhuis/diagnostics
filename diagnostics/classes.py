@@ -631,11 +631,15 @@ class StateChangeArray(object):
 
     def state(self, t=None):
         if t:
-            return self.data[
-                np.where(self.t <= t)[0][-1]
-            ]
+            if isinstance(t, datetime.datetime):
+                t = t.timestamp()
+            try:
+                s = self.data[np.where(self.t <= t)[0][-1]]
+            except IndexError:
+                s = None
         else:
-            return self.data[-1]
+            s = self.data[-1]
+        return s
 
     def __getitem__(self, item):
         return self.data.__getitem__(item)
