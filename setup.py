@@ -11,7 +11,7 @@ requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 #   python -m twine upload
 setup(
     name="bonkie-diagnostics",
-    version="0.2.0",
+    version="0.2.1",
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
