@@ -87,8 +87,6 @@ class TimeSerie(object):
             *map(repr, [self.t0, self.name, self.fs])
         )
 
-    #        return "TimeSerie({}, t0={}, name={}, fs={})".format(np.array2str(self.data, threshold=self._threshold), *map(repr, [self.t0, self.name, self.fs]))
-
     def __len__(self):
         return len(self.data)
 

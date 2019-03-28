@@ -7,7 +7,7 @@ with open("README.md", "r") as readme_file:
 requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 
 setup(
-    name="diagnostics",
+    name="bonkie-diagnostics",
     version="0.0.1",
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
@@ -19,6 +19,5 @@ setup(
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3.7",
-        "License :: MIT",
     ],
 )
