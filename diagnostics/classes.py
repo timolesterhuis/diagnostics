@@ -436,7 +436,6 @@ class TimeSerie(object):
     @logged()
     def to_events(self):
         return list(self.events())
-        # pass # TODO: create events (state changes) from data
 
     @logged()
     def events(self):
@@ -451,7 +450,6 @@ class TimeSerie(object):
     def to_statechangearray(self):
         events = self.to_events()
         return StateChangeArray.from_events(events)
-        # pass # TODO: create statechangearray from data
 
     @logged()
     def from_events(self, events):
