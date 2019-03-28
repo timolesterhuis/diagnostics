@@ -610,9 +610,13 @@ def test_statechangearray_fromreports():
     a3.te = 10  # this is a hacky way to test errors in the from_reports() method
     with pytest.raises(ValueError):
         b = StateChangeArray.from_reports([a1, a2, a3])
-    a4 = Report(t0=5, te=10, name='a')
+    a4 = Report(t0=7, te=10, name='a')
     with pytest.raises(ValueError):
         c = StateChangeArray.from_reports([a1,a2,a4])
+    d = StateChangeArray.from_reports([a1, a2, a4], on_error='ignore')
+    assert compare_statechangearrays(d, StateChangeArray([True,False,True,False],t=[2,4,6,8], name='a'))
+    e = StateChangeArray.from_reports([a1, a2, a4], on_error='extend')
+    assert compare_statechangearrays(e, StateChangeArray([True,False,True,False],t=[2,4,6,10], name='a'))
     return True
 
 

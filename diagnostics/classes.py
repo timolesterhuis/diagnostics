@@ -554,7 +554,7 @@ class StateChangeArray(object):
         return cls(data=data, t=t, name=e.name)  # THINKOF: I do not check for consistency in e.name
     
     @classmethod
-    def from_reports(cls, reports):
+    def from_reports(cls, reports, on_error='fail'):
         data = []
         t = []
         for r in reports:
@@ -564,11 +564,21 @@ class StateChangeArray(object):
                 raise ValueError("te is before t0 for report!")
             if t:
                 if not t0 > t[-1]:
-                    raise ValueError("Reports are not ordered chronically!")
+                    if on_error == "fail":
+                        raise ValueError("Reports are not ordered chronically!")
+                    elif on_error == "ignore":
+                        continue
+                    elif on_error == "extend":
+                        t.pop(-1)
+                        data.pop(-1)
+                        t.append(te)
+                        data.append(False)
+                        continue
             t.append(t0)
             data.append(True)
             t.append(te)
             data.append(False)
+
         return cls(data=data, t=t, name=r.name)  # THINKOF: I do not check for consistency in r.name
 
     def events(self):
