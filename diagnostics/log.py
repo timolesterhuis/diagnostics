@@ -1,6 +1,5 @@
 import os
 import logging
-from logging.handlers import TimedRotatingFileHandler
 from functools import wraps
 
 MOD = "modification"
@@ -13,21 +12,6 @@ modification_logger.addHandler(
 modification_logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(message)s")
-
-file_handler = TimedRotatingFileHandler(
-    os.path.join(PWD, "modifications.log"),
-    when="W0",
-    interval=1,
-    backupCount=0,
-    encoding=None,
-    delay=False,
-    utc=False,
-)
-
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-modification_logger.addHandler(file_handler)
-
 
 def logged(log=MOD):
     def wrap(function):
@@ -54,9 +38,7 @@ def logged(log=MOD):
                 "Function '{}' returned {}".format(function.__name__, response)
             )
             return response
-
         return wrapper
-
     return wrap
 
 
