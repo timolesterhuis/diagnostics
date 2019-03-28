@@ -6,9 +6,12 @@ with open("README.md", "r") as readme_file:
 
 requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 
+# upload to pypi:
+#   python setup.py sdist bdist_wheel
+#   python -m twine upload
 setup(
     name="bonkie-diagnostics",
-    version="0.0.1",
+    version="0.1.0",
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
