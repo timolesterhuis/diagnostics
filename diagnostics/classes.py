@@ -302,11 +302,9 @@ class TimeSerie(object):
     def empty(cls, t0, te, fs, name="", inclusive=False):
         if isinstance(t0, datetime.datetime):
             t0 = t0.timestamp()
-        t0 = round(t0, len(str(fs)) - 1)
         if isinstance(te, datetime.datetime):
             te = te.timestamp()
-        te = round(te, len(str(fs)) - 1)
-        k = int(((te - t0) * fs))
+        k = int(np.ceil((te - t0) * fs))
         if inclusive:
             k += 1
         data = np.zeros(k)
@@ -380,17 +378,27 @@ class TimeSerie(object):
             raise ValueError(
                 "can't modify channel to a different fs! please interpolate first"
             )
-        if c.t0 > self.t0:
+        t0_diff = self.t0 - c.t0
+        te_diff = c.te - self.te
+
+        if t0_diff < 0:
             raise DataLossError(
                 "channel data window does not fully overlap! (c.t0 > self.t0)"
             )
-        if c.te < self.te:
+        if te_diff < 0:
             raise DataLossError(
                 "channel data window does not fully overlap! (c.te < self.te)"
             )
-        # TODO: check that self.t0 and c_t0 can be exact t values for given fs
-        self.t0 - c.t0 * self.fs % 1
+
+        if (t0_diff * c.fs) % 1 > 0:
+            raise ValueError("Cant reach both t0 values using new fs")
+
         # TODO: modify data
+        pre_data = np.zeros(int(t0_diff * c.fs))
+        post_data = np.zeros(int(te_diff * c.fs))
+        self.data = np.append(pre_data, np.append(self.data, post_data))
+        self.t0 = c.t0
+
 
     @logged()
     def modify(self, method, inplace=False):
@@ -436,7 +444,6 @@ class TimeSerie(object):
     @logged()
     def to_events(self):
         return list(self.events())
-        # pass # TODO: create events (state changes) from data
 
     @logged()
     def events(self):
@@ -451,7 +458,6 @@ class TimeSerie(object):
     def to_statechangearray(self):
         events = self.to_events()
         return StateChangeArray.from_events(events)
-        # pass # TODO: create statechangearray from data
 
     @logged()
     def from_events(self, events):

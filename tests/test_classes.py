@@ -9,6 +9,7 @@ from diagnostics import (
     Report,
     Event,
 )
+from diagnostics.errors import DataLossError
 import datetime as dt
 import pytz
 
@@ -377,7 +378,7 @@ def test_timeserie_empty():
     a = TimeSerie.empty(1, 10, fs=10, name="a")
     assert len(a) == 90
     assert a.te == 9.9
-    b = TimeSerie.empty(2, 5, 4, name="b", inclusive=True)
+    b = TimeSerie.empty(2, 5, fs=4, name="b", inclusive=True)
     assert len(b) == 13
     assert b.te == 5.0
     c = TimeSerie.empty(
@@ -388,6 +389,9 @@ def test_timeserie_empty():
         inclusive=True,
     )
     assert c.te - c.t0 == 3600.0
+    d = TimeSerie.empty(1.2, 4.8, fs=100, name='d')
+    assert d.t0 == 1.2
+    assert d.te == 4.79
     return True
 
 
@@ -398,6 +402,40 @@ def test_timeserie_plot():
 
     b = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="b", fs=1, t0=dt.datetime(2019,1,1))
     f, ax, lines = b.plot(as_dt=True, show=False)
+    return True
+
+
+def test_timeserie_tochannel():
+    a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
+    b = TimeSerie.empty(0, 20, fs=1)
+    a.to_channel(b)
+    assert len(a) == 20
+    assert a.t0 == 0
+    assert a.te == 19
+    assert a.at(3) == -2
+    assert a.at(4) == -1
+    assert a.at(5) == 0
+    assert a.at(6) == 1
+    assert a.at(7) == 2
+    assert a.at(8) == 3
+    assert a.at(9) == 4
+    assert a.at(10) == 5
+    c = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
+    d = TimeSerie.empty(0,20, fs=2)
+    with pytest.raises(ValueError):
+        c.to_channel(d)
+    e = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
+    f = TimeSerie.empty(4,20, fs=1)
+    with pytest.raises(DataLossError):
+        e.to_channel(f)
+    g = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
+    h = TimeSerie.empty(0,8, fs=1)
+    with pytest.raises(DataLossError):
+        g.to_channel(h)
+    i = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
+    j = TimeSerie.empty(0.5,20.5, fs=1)
+    with pytest.raises(ValueError):
+        i.to_channel(j)
     return True
 
 
