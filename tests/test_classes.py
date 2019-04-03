@@ -616,7 +616,7 @@ def test_statechangearray_plot():
     return True
 
 
-def test_statechangearray_events():
+def test_statechangearray_toevents():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8], name="a")
     e1, e2, e3, e4 = a.to_events()
     assert compare_events(e1, Event(1, t=1, name="a"))
@@ -636,6 +636,25 @@ def test_statechangearray_fromevents():
     a5 = Event(9, t=6, name='a')
     with pytest.raises(ValueError):
         b = StateChangeArray.from_events([a1,a2,a3,a4,a5])
+    return True
+
+
+def test_statechangearray_toreports():
+    a = StateChangeArray([True,False,True,False], t=[2,4,6,8],name='a')
+    r1, r2 = a.to_reports()
+    assert compare_reports(r1, Report(2, 4, name='a'))
+    assert compare_reports(r2, Report(6, 8, name='a'))
+    b = StateChangeArray([False, True, False, True, False], t=[1, 2, 4, 6, 8], name='b')
+    r3, r4 = b.to_reports()
+    assert compare_reports(r3, Report(2, 4, name='b'))
+    assert compare_reports(r4, Report(6, 8, name='b'))
+    c = StateChangeArray([False, True, False, True, False], t=[1, 2, 4, 6, 8], name='c')
+    r5, r6 = c.to_reports()
+    assert compare_reports(r5, Report(2, 4, name='c'))
+    assert compare_reports(r6, Report(6, 8, name='c'))
+    d = StateChangeArray([1,2,4,7], t=[2,4,6,8], name='d')
+    with pytest.raises(ValueError):
+        d.to_reports()
     return True
 
 
@@ -813,6 +832,15 @@ def test_statechangearray_totimeseries():
             fs=2,
             name="c",
         ),
+    )
+    return True
+
+
+def test_statechangearray_fromtimeserie():
+    a = TimeSerie([1, 1, 1, 2, 2, 3, 4, 4, 4], t0=1, fs=2, name="a")
+    sta_a = StateChangeArray.from_timeserie(a)
+    assert compare_statechangearrays(
+        sta_a, StateChangeArray([1, 2, 3, 4], t=[1, 2.5, 3.5, 4], name="a")
     )
     return True
 

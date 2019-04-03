@@ -14,6 +14,14 @@ from .errors import DataLossError
 
 
 class TimeSerie(object):
+
+    # TODO: TimeSerie.to_statechangearray
+    # TODO: TimeSerie.to_reports
+    # TODO: TimeSerie.to_events
+    # TODO: TimeSerie.from_statechangearray
+    # TODO: TimeSerie.from_reports
+    # TODO: TimeSerie.from_events
+
     def __init__(self, data, t0=0, name="", fs=1):
 
         if not isinstance(data, np.ndarray):
@@ -393,7 +401,6 @@ class TimeSerie(object):
         if (t0_diff * c.fs) % 1 > 0:
             raise ValueError("Cant reach both t0 values using new fs")
 
-        # TODO: modify data
         pre_data = np.zeros(int(t0_diff * c.fs))
         post_data = np.zeros(int(te_diff * c.fs))
         self.data = np.append(pre_data, np.append(self.data, post_data))
@@ -493,6 +500,8 @@ class BooleanTimeSerie(TimeSerie):
 
 
 class StateChangeArray(object):
+
+    # TODO: StateChangeArray.from_timeserie
 
     def __init__(self, data, t, name="", shrink=False):
 
@@ -621,9 +630,26 @@ class StateChangeArray(object):
             raise NameError("unknown method '{}'".format(method))
         return TimeSerie(data, t0=t0, fs=fs, name=name)
 
-    def to_reports(self):
+    @classmethod
+    def from_timeserie(cls, timeserie):
+        return timeserie.to_statechangearray()
+
+    def reports(self):
         if not self.is_bool():
-            ValueError("Can't create reports from non-boolean statechangearray!")
+            raise ValueError("Can't create reports from non-boolean statechangearray!")
+        gen = self.iter()
+        if self.data[0] == False:
+            _ = next(gen)
+        while True:
+            try:
+                t0, _ = next(gen)
+                te, _ = next(gen)
+                yield Report(t0, te, name=self.name)
+            except StopIteration:
+                break
+
+    def to_reports(self):
+        return list(self.reports())
 
     def is_bool(self):
         return self.data.dtype == np.bool
@@ -771,6 +797,7 @@ class StateChangeArray(object):
 
 
 class BooleanStateChangeArray(StateChangeArray):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.data.dtype != np.bool:
@@ -783,8 +810,8 @@ class BooleanStateChangeArray(StateChangeArray):
 
 
 class Report(object):
-    def __init__(self, t0, te, name=""):
 
+    def __init__(self, t0, te, name=""):
         if isinstance(t0, datetime.datetime):
             t0 = t0.timestamp()
         self.t0 = t0
@@ -799,19 +826,25 @@ class Report(object):
         return "Report(t0={}, te={}, name={})".format(*map(repr, [self.t0, self.te, self.name]))
 
     @logged()
-    def to_events(self):
-        event_t0 = Event(1, t=self.t0, name=self.name)
-        event_te = Event(0, t=self.te, name=self.name)
-        return (event_t0, event_te)
-
-    @logged()
     def to_timeserie(self, fs=1, window=1):  # TODO: implement tolerance warning/error
-        t0 = self.t0 - (window / fs)
+        t0 = self.t0 - (window / fs)  # FINDOUT: Why do I do dis?
         window_data = np.zeros(window)
         k = round((self.te - self.t0) * fs)
         data = np.ones(k)
         data = np.append(window_data, np.append(data, window_data))
         return TimeSerie(data, t0=t0, fs=fs, name=self.name)
+
+    @logged()
+    def to_statechangearray(self):
+        t = [self.t0, self.te]
+        data = [True, False]
+        return StateChangeArray(data, t=t, name=self.name)
+
+    @logged()
+    def to_events(self):
+        event_t0 = Event(1, t=self.t0, name=self.name)
+        event_te = Event(0, t=self.te, name=self.name)
+        return (event_t0, event_te)
 
 
 class Event(object):
