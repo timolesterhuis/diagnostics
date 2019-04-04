@@ -494,6 +494,16 @@ def test_timeserie_tostatechangearray():
     return True
 
 
+def test_timeserie_toreports():
+    a = TimeSerie(10*np.sin(np.linspace(0,2*np.pi,100)), t0=1, fs=10, name='a')
+    b = a > 4
+    b.name = "a > 4"
+    reports = b.to_reports()
+    assert len(reports) == 1
+    assert compare_reports(reports[0], Report(1.7, 5.4, name="a > 4"))
+    return True
+
+
 def test_timeserie_interpolate():
     a = TimeSerie([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], t0=0, fs=1, name="a")
     t_new = np.arange(0, 9 + 0.5, 0.5)
@@ -560,6 +570,15 @@ def test_statechangearray_init():
                                     pytz.utc.localize(dt.datetime(2019, 1, 1, 9))])
     assert all(h.t == [1546329600.0, 1546333200.0])
     return True
+
+
+def test_statechangearray_repr():
+    a = StateChangeArray([1,2,4,7], t=[2,4,6,8], name="a")
+    assert repr(a) == "StateChangeArray([1 2 4 7], t=[2 4 6 8], name='a')"
+    b = StateChangeArray([True,False,True,False], t=[2,4,6,8], name="b")
+    assert repr(b) == "StateChangeArray([ True False  True False], t=[2 4 6 8], name='b')"
+    return True
+
 
 
 def test_statechangearray_len():

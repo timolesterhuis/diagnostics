@@ -15,9 +15,7 @@ from .errors import DataLossError
 
 class TimeSerie(object):
 
-    # TODO: TimeSerie.to_statechangearray
     # TODO: TimeSerie.to_reports
-    # TODO: TimeSerie.to_events
     # TODO: TimeSerie.from_statechangearray
     # TODO: TimeSerie.from_reports
     # TODO: TimeSerie.from_events
@@ -466,6 +464,10 @@ class TimeSerie(object):
         events = self.to_events()
         return StateChangeArray.from_events(events)
 
+    def to_reports(self):
+        array = self.to_statechangearray()
+        return array.to_reports()
+
     @logged()
     def from_events(self, events):
         pass  # TODO: implement creation of TimeSeries from event (not boolean, since the validity of single events are not always known) (also return 'validity' BooleanTimeSerie!)
@@ -868,6 +870,3 @@ class Event(object):
         return "Event({}, t={}, name={})".format(
             *map(repr, [self.value, self.t, self.name])
         )
-
-    def __print__(self):
-        return "<{}\t{}: {}>".format(self.t, self.name, self.state())
