@@ -910,6 +910,13 @@ def test_report_toevent():
     return True
 
 
+def test_report_tostatechangearray():
+    a = Report(1, 4, name='a')
+    array = a.to_statechangearray()
+    assert compare_statechangearrays(array, StateChangeArray([True,False], t=[1,4], name='a'))
+    return True
+
+
 def test_report_totimeserie():
     a = Report(2, 4, name="a")
     ts_a = a.to_timeserie()
