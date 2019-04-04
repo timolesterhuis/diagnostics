@@ -20,6 +20,13 @@ class TimeSerie(object):
     # TODO: TimeSerie.from_events
 
     def __init__(self, data, t0=0, name="", fs=1):
+        """
+
+        :param data:
+        :param t0:
+        :param name:
+        :param fs:
+        """
 
         if not isinstance(data, np.ndarray):
             data = np.array(data)
@@ -305,6 +312,16 @@ class TimeSerie(object):
 
     @classmethod
     def empty(cls, t0, te, fs, name="", inclusive=False):
+        """
+
+        :param t0:
+        :param te:
+        :param fs:
+        :param name:
+        :param inclusive:
+        :return:
+        """
+
         if isinstance(t0, datetime.datetime):
             t0 = t0.timestamp()
         if isinstance(te, datetime.datetime):
@@ -316,13 +333,28 @@ class TimeSerie(object):
         return cls(data, t0=t0, fs=fs, name=name)
 
     def at(self, t):
+        """
+
+        :param t:
+        :return:
+        """
         return self.data[np.where(self.t == t)]
 
     def where(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return self.data[np.where(*args, **kwargs)]
 
     @logged()
     def reset_t0(self):
+        """
+
+        :return:
+        """
         self.t0 = 0
 
     @logged()
@@ -353,10 +385,21 @@ class TimeSerie(object):
         return datetime.datetime.utcfromtimestamp(self.te)
 
     def iter(self):
+        """
+
+        :return:
+        """
+
         for t, v in zip(self.t, self.data):
             yield t, v
 
     def plot(self, **kwargs):
+        """
+
+        :param kwargs:
+        :return:
+        """
+
         show = kwargs.get('show', True)
         as_dt = kwargs.get('as_dt', False)
         ylabel = kwargs.get('ylabel', '')
@@ -379,6 +422,12 @@ class TimeSerie(object):
         return f, ax, lines
 
     def to_channel(self, c):
+        """
+
+        :param c:
+        :return:
+        """
+
         if self.fs != c.fs:
             raise ValueError(
                 "can't modify channel to a different fs! please interpolate first"
@@ -406,6 +455,13 @@ class TimeSerie(object):
 
     @logged()
     def modify(self, method, inplace=False):
+        """
+
+        :param method:
+        :param inplace:
+        :return:
+        """
+
         if inplace:
             self.data = self.mod_func[method](self.data)
         else:
@@ -417,6 +473,13 @@ class TimeSerie(object):
 
     @logged()
     def interpolate(self, t_new, inplace=False):
+        """
+
+        :param t_new:
+        :param inplace:
+        :return:
+        """
+
         data = np.interp(t_new, self.t, self.data)
         fs = np.mean(1 / np.diff(t_new))
 
@@ -434,10 +497,20 @@ class TimeSerie(object):
             return classtype(data, fs=fs, t0=t_new[0], name=self.name)
 
     def is_bool(self):
+        """
+
+        :return:
+        """
+
         return self.data.dtype == np.bool
 
     @logged()
     def to_bool(self, inplace=False):
+        """
+
+        :param inplace:
+        :return:
+        """
 
         data = self.data.astype(np.bool)
         if inplace:
@@ -447,10 +520,20 @@ class TimeSerie(object):
 
     @logged()
     def to_events(self):
+        """
+
+        :return:
+        """
+
         return list(self.events())
 
     @logged()
     def events(self):
+        """
+
+        :return:
+        """
+
         state = None
         for t, v in self.iter():
             if v != state:
@@ -460,20 +543,42 @@ class TimeSerie(object):
 
     @logged()
     def to_statechangearray(self):
+        """
+
+        :return:
+        """
+
         events = self.to_events()
         return StateChangeArray.from_events(events)
 
     def to_reports(self):
+        """
+
+        :return:
+        """
+
         array = self.to_statechangearray()
         return array.to_reports()
 
     @logged()
     def from_events(self, events):
+        """
+
+        :param events:
+        :return:
+        """
+
         pass  # TODO: implement creation of TimeSeries from event (not boolean, since the validity of single events are not always known) (also return 'validity' BooleanTimeSerie!)
 
 
 class BooleanTimeSerie(TimeSerie):
     def __init__(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        """
+
         super().__init__(*args, **kwargs)  # TODO: create check for boolean values data
         if self.data.dtype != np.bool:
             raise ValueError("data is not of dtype 'bool'")
@@ -497,12 +602,25 @@ class BooleanTimeSerie(TimeSerie):
 
     @logged()
     def from_reports(self, reports):
+        """
+
+        :param reports:
+        :return:
+        """
+
         pass  # TODO: implement creation of BooleanTimeSerie from (multiple) reports. Might use report.to_timeserie() method and then combines multiple timeseries
 
 
 class StateChangeArray(object):
 
     def __init__(self, data, t, name="", shrink=False):
+        """
+
+        :param data:
+        :param t:
+        :param name:
+        :param shrink:
+        """
 
         if len(data) != len(t):
             raise ValueError("data & t should be of the same length")
@@ -552,11 +670,22 @@ class StateChangeArray(object):
         return self.data.__len__()
 
     def iter(self):
+        """
+
+        :return:
+        """
+
         for t, v in zip(self.t, self.data):
             yield t, v
 
     @classmethod
     def from_events(cls, events):
+        """
+
+        :param events:
+        :return:
+        """
+
         data = []
         t = []
         for e in events:
@@ -569,6 +698,13 @@ class StateChangeArray(object):
     
     @classmethod
     def from_reports(cls, reports, on_error='fail'):
+        """
+
+        :param reports:
+        :param on_error:
+        :return:
+        """
+
         data = []
         t = []
         for r in reports:
@@ -596,19 +732,43 @@ class StateChangeArray(object):
         return cls(data=data, t=t, name=r.name)  # THINKOF: I do not check for consistency in r.name
 
     def events(self):
+        """
+
+        :return:
+        """
+
         for t, v in self.iter():
             e = Event(value=v, t=t, name=self.name)
             yield e
 
     def to_events(self):
+        """
+
+        :return:
+        """
+
         return list(self.events())
 
     def duration(self):
+        """
+
+        :return:
+        """
+
         return np.diff(self.t)
 
     def to_timeseries(
         self, fs, method="default", tol=1e-4, tail=0
     ):  # TODO: fix ! end is not exlusive <-- am i sure of this?
+        """
+
+        :param fs:
+        :param method:
+        :param tol:
+        :param tail:
+        :return:
+        """
+
         t0 = self.t[0]
         name = self.name
         if method == "default":  # TODO: do I want tail or window as a parameter?
@@ -631,9 +791,20 @@ class StateChangeArray(object):
 
     @classmethod
     def from_timeserie(cls, timeserie):
+        """
+
+        :param timeserie:
+        :return:
+        """
+
         return timeserie.to_statechangearray()
 
     def reports(self):
+        """
+
+        :return:
+        """
+
         if not self.is_bool():
             raise ValueError("Can't create reports from non-boolean statechangearray!")
         gen = self.iter()
@@ -648,12 +819,28 @@ class StateChangeArray(object):
                 break
 
     def to_reports(self):
+        """
+
+        :return:
+        """
+
         return list(self.reports())
 
     def is_bool(self):
+        """
+
+        :return:
+        """
+
         return self.data.dtype == np.bool
 
     def to_bool(self, inplace=False):
+        """
+
+        :param inplace:
+        :return:
+        """
+
         data = self.data.astype(np.bool)
         if inplace:
             self.data = data
@@ -661,14 +848,32 @@ class StateChangeArray(object):
             return BooleanStateChangeArray(data, t=self.t, name=self.name)
 
     def at(self, t):
+        """
+
+        :param t:
+        :return:
+        """
+
         return self.data[
             np.where(self.t == t)
         ]
 
     def where(self, statement):
+        """
+
+        :param statement:
+        :return:
+        """
+
         return self.data[np.where(statement)]
 
     def state(self, t=None):
+        """
+
+        :param t:
+        :return:
+        """
+
         if t:
             if isinstance(t, datetime.datetime):
                 t = t.timestamp()
@@ -766,6 +971,12 @@ class StateChangeArray(object):
         return StateChangeArray(~self.data, t=self.t, name="(~{})".format(self.name))
 
     def plot(self, **kwargs):
+        """
+
+        :param kwargs:
+        :return:
+        """
+
         show = kwargs.get('show', True)
         as_dt = kwargs.get('as_dt', False)
         style = kwargs.get("style", 'block')
@@ -798,6 +1009,12 @@ class StateChangeArray(object):
 class BooleanStateChangeArray(StateChangeArray):
 
     def __init__(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        """
+
         super().__init__(*args, **kwargs)
         if self.data.dtype != np.bool:
             raise ValueError("data is not of dtype 'bool'")
@@ -811,6 +1028,13 @@ class BooleanStateChangeArray(StateChangeArray):
 class Report(object):
 
     def __init__(self, t0, te, name=""):
+        """
+
+        :param t0:
+        :param te:
+        :param name:
+        """
+
         if isinstance(t0, datetime.datetime):
             t0 = t0.timestamp()
         self.t0 = t0
@@ -826,6 +1050,13 @@ class Report(object):
 
     @logged()
     def to_timeserie(self, fs=1, window=1):  # TODO: implement tolerance warning/error
+        """
+
+        :param fs:
+        :param window:
+        :return:
+        """
+
         t0 = self.t0 - (window / fs)  # FINDOUT: Why do I do dis?
         window_data = np.zeros(window)
         k = round((self.te - self.t0) * fs)
@@ -835,19 +1066,37 @@ class Report(object):
 
     @logged()
     def to_statechangearray(self):
+        """
+
+        :return:
+        """
+
         t = [self.t0, self.te]
         data = [True, False]
         return StateChangeArray(data, t=t, name=self.name)
 
     @logged()
     def to_events(self):
+        """
+
+        :return:
+        """
+
         event_t0 = Event(1, t=self.t0, name=self.name)
         event_te = Event(0, t=self.te, name=self.name)
         return (event_t0, event_te)
 
 
 class Event(object):
+
     def __init__(self, value, t=0, name="", validity=1):
+        """
+
+        :param value:
+        :param t:
+        :param name:
+        :param validity:
+        """
 
         self.value = value
         if isinstance(t, datetime.datetime):
