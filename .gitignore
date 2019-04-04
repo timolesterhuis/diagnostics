@@ -1,5 +1,6 @@
 *.log
 *.log.*
+*.pyc
 __pycache__
 .coverage
 htmlcov/
