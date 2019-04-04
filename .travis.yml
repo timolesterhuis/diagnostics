@@ -12,7 +12,8 @@ matrix:
 
 install:
   - pip install -r requirements_dev.txt
-  - python setup.py install
+  - pip install -r requirements.txt
+  - python setup.py install --no-binaries
 script:
   - python setup.py test -a "--verbose"
 after_success:
