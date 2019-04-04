@@ -1,6 +1,5 @@
 import os
 import sys
-import shlex
 
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
@@ -26,8 +25,7 @@ class PyTest(TestCommand):
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-with open('requirements.txt') as f:
-    requirements = shlex.split(f.read(), comments=True)
+requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 
 # upload to pypi:
 #   python setup.py sdist bdist_wheel
