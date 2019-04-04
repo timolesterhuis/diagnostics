@@ -533,6 +533,12 @@ def test_booleantimeserie_init():
     return True
 
 
+def test_booleantimeserie_repr():
+    a = BooleanTimeSerie([False,False,False,True,True,True], fs=2, t0=1, name="a")
+    assert repr(a) == "BooleanTimeSerie([False False False  True  True  True], t0=1, name='a', fs=2)"
+    return True
+
+
 def test_booleantimeserie_properties():
     a = BooleanTimeSerie([False, True, False], name="a", fs=2, t0=1)
     assert a.hz == a.fs
@@ -578,7 +584,6 @@ def test_statechangearray_repr():
     b = StateChangeArray([True,False,True,False], t=[2,4,6,8], name="b")
     assert repr(b) == "StateChangeArray([ True False  True False], t=[2 4 6 8], name='b')"
     return True
-
 
 
 def test_statechangearray_len():
@@ -920,6 +925,11 @@ def test_report_init():
         c = Report(t0=5, te=1, name="c")
     return True
 
+def test_report_repr():
+    a = Report(0, 8, name="a")
+    assert repr(a) == "Report(t0=0, te=8, name='a')"
+    return True
+
 
 def test_report_toevent():
     a = Report(1, 3, name="a")
@@ -972,6 +982,10 @@ def test_event_init():
     assert d.validity == 0
     return True
 
+def test_event_repr():
+    a = Event(1, t=0, name='a')
+    assert repr(a) == "Event(1, t=0, name='a')"
+    return True
 
 def test_event_state():
     a = Event(4, t=4, name="a", validity=1)

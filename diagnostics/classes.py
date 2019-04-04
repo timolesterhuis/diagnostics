@@ -3,7 +3,6 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .log import modlog
 from .log import logged
 
 from .errors import DataLossError
@@ -502,8 +501,6 @@ class BooleanTimeSerie(TimeSerie):
 
 
 class StateChangeArray(object):
-
-    # TODO: StateChangeArray.from_timeserie
 
     def __init__(self, data, t, name="", shrink=False):
 
