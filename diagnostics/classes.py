@@ -1091,7 +1091,6 @@ class Event(object):
 
     def __init__(self, value, t=0, name="", validity=1):
         """
-
         :param value:
         :param t:
         :param name:
