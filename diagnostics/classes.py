@@ -374,7 +374,10 @@ class TimeSerie(object):
 
     @property
     def dt(self):
-        return np.array([datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()], dtype='datetime64')
+        return np.array(
+            [datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()],
+            dtype="datetime64",
+        )
 
     @property
     def dt0(self):
@@ -400,17 +403,17 @@ class TimeSerie(object):
         :return:
         """
 
-        show = kwargs.get('show', True)
-        as_dt = kwargs.get('as_dt', False)
-        ylabel = kwargs.get('ylabel', '')
+        show = kwargs.get("show", True)
+        as_dt = kwargs.get("as_dt", False)
+        ylabel = kwargs.get("ylabel", "")
         f = plt.figure(frameon=False)
         ax = f.add_subplot(111)
         ax.set_title("TimeSerie")
         if as_dt:
             timeaxis = self.dt
-            xlabel = kwargs.get('xlabel', 'datetime [utc]')
+            xlabel = kwargs.get("xlabel", "datetime [utc]")
         else:
-            xlabel = kwargs.get('xlabel', 'time [s]')
+            xlabel = kwargs.get("xlabel", "time [s]")
             timeaxis = self.t
 
         ax.set_xlabel(xlabel)
@@ -451,7 +454,6 @@ class TimeSerie(object):
         post_data = np.zeros(int(te_diff * c.fs))
         self.data = np.append(pre_data, np.append(self.data, post_data))
         self.t0 = c.t0
-
 
     @logged()
     def modify(self, method, inplace=False):
@@ -612,7 +614,6 @@ class BooleanTimeSerie(TimeSerie):
 
 
 class StateChangeArray(object):
-
     def __init__(self, data, t, name="", shrink=False):
         """
 
@@ -664,7 +665,10 @@ class StateChangeArray(object):
 
     @property
     def dt(self):
-        return np.array([datetime.datetime.utcfromtimestamp(t_) for t_ in self.t], dtype='datetime64')
+        return np.array(
+            [datetime.datetime.utcfromtimestamp(t_) for t_ in self.t],
+            dtype="datetime64",
+        )
 
     def __len__(self):
         return self.data.__len__()
@@ -694,10 +698,12 @@ class StateChangeArray(object):
                     raise ValueError("Events are not ordered chronically!")
             t.append(e.t)
             data.append(e.value)
-        return cls(data=data, t=t, name=e.name)  # THINKOF: I do not check for consistency in e.name
-    
+        return cls(
+            data=data, t=t, name=e.name
+        )  # THINKOF: I do not check for consistency in e.name
+
     @classmethod
-    def from_reports(cls, reports, on_error='fail'):
+    def from_reports(cls, reports, on_error="fail"):
         """
 
         :param reports:
@@ -729,7 +735,9 @@ class StateChangeArray(object):
             t.append(te)
             data.append(False)
 
-        return cls(data=data, t=t, name=r.name)  # THINKOF: I do not check for consistency in r.name
+        return cls(
+            data=data, t=t, name=r.name
+        )  # THINKOF: I do not check for consistency in r.name
 
     def events(self):
         """
@@ -854,9 +862,7 @@ class StateChangeArray(object):
         :return:
         """
 
-        return self.data[
-            np.where(self.t == t)
-        ]
+        return self.data[np.where(self.t == t)]
 
     def where(self, statement):
         """
@@ -977,10 +983,10 @@ class StateChangeArray(object):
         :return:
         """
 
-        show = kwargs.get('show', True)
-        as_dt = kwargs.get('as_dt', False)
-        style = kwargs.get("style", 'block')
-        ylabel = kwargs.get('ylabel', '')
+        show = kwargs.get("show", True)
+        as_dt = kwargs.get("as_dt", False)
+        style = kwargs.get("style", "block")
+        ylabel = kwargs.get("ylabel", "")
         f = plt.figure(frameon=False)
         ax = f.add_subplot(111)
         ax.set_title("StateChangeArray")
@@ -1007,7 +1013,6 @@ class StateChangeArray(object):
 
 
 class BooleanStateChangeArray(StateChangeArray):
-
     def __init__(self, *args, **kwargs):
         """
 
@@ -1026,7 +1031,6 @@ class BooleanStateChangeArray(StateChangeArray):
 
 
 class Report(object):
-
     def __init__(self, t0, te, name=""):
         """
 
@@ -1046,7 +1050,13 @@ class Report(object):
         self.name = name
 
     def __repr__(self):
-        return "Report(t0={}, te={}, name={})".format(*map(repr, [self.t0, self.te, self.name]))
+        return "Report(t0={}, te={}, name={})".format(
+            *map(repr, [self.t0, self.te, self.name])
+        )
+
+    @property
+    def duration(self):
+        return self.te - self.t0
 
     @logged()
     def to_timeserie(self, fs=1, window=1):  # TODO: implement tolerance warning/error
@@ -1088,7 +1098,6 @@ class Report(object):
 
 
 class Event(object):
-
     def __init__(self, value, t=0, name="", validity=1):
         """
         :param value:

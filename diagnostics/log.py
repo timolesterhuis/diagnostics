@@ -13,13 +13,16 @@ modification_logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(message)s")
 
+
 def logged():
     def wrap(function):
         @wraps(function)
         def wrapper(*args, **kwargs):
             response = function(*args, **kwargs)
             return response
+
         return wrapper
+
     return wrap
 
 
