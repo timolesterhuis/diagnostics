@@ -11,6 +11,9 @@ Welcome to diagnostics's documentation!
    :caption: Contents:
 
 
+.. automodule:: diagnostics
+  :members:
+
 
 Indices and tables
 ==================
