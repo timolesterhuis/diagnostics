@@ -10,10 +10,13 @@ Welcome to diagnostics's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   readme
+   .. changelog
 
 .. automodule:: diagnostics
   :members:
 
+SOME TEXT
 
 Indices and tables
 ==================
