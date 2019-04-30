@@ -14,7 +14,7 @@ install:
   - pip install -r requirements_dev.txt
   - pip install -r requirements.txt
 script:
-  python -m black --check --verbose diagnostics
+  - python -m black --check --verbose diagnostics
   - python setup.py test -a "--verbose"
 after_success:
   - coveralls
