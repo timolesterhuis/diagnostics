@@ -382,17 +382,23 @@ class TimeSerie(object):
     @property
     def dt(self):
         return np.array(
-            [datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()],  # THINKOF: should this always be UTC?
+            [
+                datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()
+            ],  # THINKOF: should this always be UTC?
             dtype="datetime64",
         )
 
     @property
     def dt0(self):
-        return datetime.datetime.utcfromtimestamp(self.t0)  # THINKOF: should this always be UTC?
+        return datetime.datetime.utcfromtimestamp(
+            self.t0
+        )  # THINKOF: should this always be UTC?
 
     @property
     def dte(self):
-        return datetime.datetime.utcfromtimestamp(self.te)  # THINKOF: should this always be UTC?
+        return datetime.datetime.utcfromtimestamp(
+            self.te
+        )  # THINKOF: should this always be UTC?
 
     def iter(self):
         """
@@ -638,7 +644,7 @@ class StateChangeArray(object):
 
         if isinstance(t[0], datetime.datetime):
             if t[0].tzinfo is None:
-                t = [pytz.UTZ.localize(ti).timestamp() for ti in t]
+                t = [pytz.UTC.localize(ti).timestamp() for ti in t]
             else:
                 t = [ti.timestamp() for ti in t]
 
