@@ -3,7 +3,7 @@ black
 wheel==0.33.1
 twine==1.13.0
 pylint
-pytest==4.4.0
+pytest==4.4.1
 pytest-cov==2.6.1
 pytest-mpl==0.10
 coveralls==1.7.0
