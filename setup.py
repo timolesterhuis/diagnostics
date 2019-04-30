@@ -32,7 +32,7 @@ requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 #   python -m twine upload dist/*
 
 setup(
-    name="bonkie-diagnostics",
+    name="pydiagnostics",
     version="0.2.1",
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
