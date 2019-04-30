@@ -1,12 +1,13 @@
-pip==19.0.3
-black
+
+black==19.3b0
+pip==19.1
 wheel==0.33.1
 twine==1.13.0
-pylint
-pytest==4.4.0
+pylint==2.3.1
+pytest==4.4.1
 pytest-cov==2.6.1
 pytest-mpl==0.10
 coveralls==1.7.0
-setuptools==40.9.0
+setuptools==41.0.1
 bump2version==0.5.10
-sphinx==2.0.0 # https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
+sphinx==2.0.1 # https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html

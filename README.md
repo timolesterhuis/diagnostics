@@ -1,10 +1,12 @@
 ## <img src="https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png" alt="*Designed by Freepik from www.flaticon.com*" width="50" height="50" />  Diagnostics - a toolbox built for analyzing diagnostic data!
 
 
-[![Build Status](https://travis-ci.org/tim00w/diagnostics.svg?branch=master)](https://travis-ci.org/tim00w/diagnostics)
-[![Coverage Status](https://coveralls.io/repos/github/tim00w/diagnostics/badge.svg?branch=master)](https://coveralls.io/github/tim00w/diagnostics?branch=master)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Documentation Status](https://readthedocs.org/projects/diagnostics/badge/?version=latest)](https://diagnostics.readthedocs.io/en/latest/?badge=latest)
+<a href="https://travis-ci.org/tim00w/diagnostics"><img alt="Build Status" src="https://travis-ci.org/tim00w/diagnostics.svg?branch=master"></a>
+<a href='https://coveralls.io/github/tim00w/diagnostics?branch=master'><img src='https://coveralls.io/repos/github/tim00w/diagnostics/badge.svg?branch=master' alt='Coverage Status' /></a>
+<a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
+<a href="https://diagnostics.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation status" src="https://readthedocs.org/projects/diagnostics/badge/?version=latest"></a>
+<a href="https://github.com/ambv/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+
 
 
 Installation
