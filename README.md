@@ -2,7 +2,7 @@
 
 
 <a href="https://travis-ci.org/tim00w/diagnostics"><img alt="Build Status" src="https://travis-ci.org/tim00w/diagnostics.svg?branch=master"></a>
-<a href="(https://coveralls.io/github/tim00w/diagnostics?branch=master"><img alt="coverage status" src="https://coveralls.io/repos/github/tim00w/diagnostics/badge.svg?branch=master"></a>
+<a href='https://coveralls.io/github/tim00w/diagnostics?branch=master'><img src='https://coveralls.io/repos/github/tim00w/diagnostics/badge.svg?branch=master' alt='Coverage Status' /></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
 <a href="https://diagnostics.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation status" src="https://readthedocs.org/projects/diagnostics/badge/?version=latest"></a>
 <a href="https://github.com/ambv/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
