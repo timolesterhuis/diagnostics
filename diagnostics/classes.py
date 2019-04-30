@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,6 +34,8 @@ class TimeSerie(object):
         self._data = data
 
         if isinstance(t0, datetime.datetime):
+            if t0.tzinfo is None:
+                t0.replace(tzinfo=pytz.UTC)
             t0 = t0.timestamp()
         self._t0 = t0
 
@@ -323,8 +326,12 @@ class TimeSerie(object):
         """
 
         if isinstance(t0, datetime.datetime):
+            if t0.tzinfo is None:
+                t0.replace(tzinfo=pytz.UTC)
             t0 = t0.timestamp()
         if isinstance(te, datetime.datetime):
+            if te.tzinfo is None:
+                te.replace(tzinfo=pytz.UTC)
             te = te.timestamp()
         k = int(np.ceil((te - t0) * fs))
         if inclusive:
@@ -375,17 +382,17 @@ class TimeSerie(object):
     @property
     def dt(self):
         return np.array(
-            [datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()],
+            [datetime.datetime.utcfromtimestamp(t_) for t_ in self._t()],  # THINKOF: should this always be UTC?
             dtype="datetime64",
         )
 
     @property
     def dt0(self):
-        return datetime.datetime.utcfromtimestamp(self.t0)
+        return datetime.datetime.utcfromtimestamp(self.t0)  # THINKOF: should this always be UTC?
 
     @property
     def dte(self):
-        return datetime.datetime.utcfromtimestamp(self.te)
+        return datetime.datetime.utcfromtimestamp(self.te)  # THINKOF: should this always be UTC?
 
     def iter(self):
         """
@@ -630,7 +637,10 @@ class StateChangeArray(object):
             data = np.array(data)
 
         if isinstance(t[0], datetime.datetime):
-            t = [ti.timestamp() for ti in t]
+            if t[0].tzinfo is None:
+                t = [pytz.UTZ.localize(ti).timestamp() for ti in t]
+            else:
+                t = [ti.timestamp() for ti in t]
 
         if not isinstance(t, np.ndarray):  # TODO: implement t being a datetimearray
             t = np.array(t)
@@ -882,6 +892,8 @@ class StateChangeArray(object):
 
         if t:
             if isinstance(t, datetime.datetime):
+                if t.tzinfo is None:
+                    t.replace(tzinfo=pytz.UTC)
                 t = t.timestamp()
             try:
                 s = self.data[np.where(self.t <= t)[0][-1]]
@@ -1040,9 +1052,13 @@ class Report(object):
         """
 
         if isinstance(t0, datetime.datetime):
+            if t0.tzinfo is None:
+                t0.replace(tzinfo=pytz.UTC)
             t0 = t0.timestamp()
         self.t0 = t0
         if isinstance(te, datetime.datetime):
+            if te.tzinfo is None:
+                te.replace(tzinfo=pytz.UTC)
             te = te.timestamp()
         if te < t0:
             raise ValueError("te can't be before t0!")
@@ -1108,6 +1124,8 @@ class Event(object):
 
         self.value = value
         if isinstance(t, datetime.datetime):
+            if t.tzinfo is None:
+                t.replace(tzinfo=pytz.UTC)
             t = t.timestamp()
         self.t = t
         self.name = name
