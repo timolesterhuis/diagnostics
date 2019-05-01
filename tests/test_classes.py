@@ -63,11 +63,17 @@ def test_timeserie_datetime_t0():
     a = TimeSerie(
         [1, 2, 3], t0=pytz.utc.localize(dt.datetime(2000, 1, 1)), fs=1, name="a"
     )
+    b = TimeSerie([1, 2, 3], t0=dt.datetime(2000, 1, 1), fs=1, name="b")
     assert a.t0 == 946684800.0
     assert a.te == 946684802.0
     assert a.dt0 == dt.datetime(2000, 1, 1)
     assert a.dte == dt.datetime(2000, 1, 1, 0, 0, 2)
     assert all(a.dt == np.array(['2000-01-01T00:00:00', '2000-01-01T00:00:01', '2000-01-01T00:00:02'], dtype='datetime64'))
+    assert b.t0 == 946684800.0
+    assert b.te == 946684802.0
+    assert b.dt0 == dt.datetime(2000, 1, 1)
+    assert b.dte == dt.datetime(2000, 1, 1, 0, 0, 2)
+    assert all(b.dt == np.array(['2000-01-01T00:00:00', '2000-01-01T00:00:01', '2000-01-01T00:00:02'], dtype='datetime64'))
     return True
 
 
@@ -921,9 +927,23 @@ def test_report_init():
     b = Report(start, end, name="b")
     assert b.t0 == 946684800.0
     assert b.te == 946684860.0
+    start = dt.datetime(2000, 1, 1)
+    end = start + dt.timedelta(seconds=60)
+    c = Report(start, end, name="c")
+    assert c.t0 == 946684800.0
+    assert c.te == 946684860.0
     with pytest.raises(ValueError):
-        c = Report(t0=5, te=1, name="c")
+        d = Report(t0=5, te=1, name="d")
     return True
+
+
+def test_report_duration():
+    start = dt.datetime(2000, 1, 1)
+    end = start + dt.timedelta(seconds=60)
+    a = Report(start, end, name="a")
+    assert a.duration == 60
+    return True
+
 
 def test_report_repr():
     a = Report(0, 8, name="a")
@@ -971,15 +991,19 @@ def test_event_init():
     b = Event(2, t=start)
     assert b.value == 2
     assert b.t == 946684800.0
-    c = Event(3, t=3, name="c")
-    assert c.value == 3
-    assert c.t == 3
-    assert c.name == "c"
-    d = Event(4, t=4, name="d", validity=0)
-    assert d.value == 4
-    assert d.t == 4
+    start = dt.datetime(2000, 1, 1)
+    c = Event(2, t=start)
+    assert c.value == 2
+    assert c.t == 946684800.0
+    d = Event(3, t=3, name="d")
+    assert d.value == 3
+    assert d.t == 3
     assert d.name == "d"
-    assert d.validity == 0
+    e = Event(4, t=4, name="e", validity=0)
+    assert e.value == 4
+    assert e.t == 4
+    assert e.name == "e"
+    assert e.validity == 0
     return True
 
 def test_event_repr():
