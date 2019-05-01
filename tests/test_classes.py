@@ -68,12 +68,24 @@ def test_timeserie_datetime_t0():
     assert a.te == 946684802.0
     assert a.dt0 == dt.datetime(2000, 1, 1)
     assert a.dte == dt.datetime(2000, 1, 1, 0, 0, 2)
-    assert all(a.dt == np.array(['2000-01-01T00:00:00', '2000-01-01T00:00:01', '2000-01-01T00:00:02'], dtype='datetime64'))
+    assert all(
+        a.dt
+        == np.array(
+            ["2000-01-01T00:00:00", "2000-01-01T00:00:01", "2000-01-01T00:00:02"],
+            dtype="datetime64",
+        )
+    )
     assert b.t0 == 946684800.0
     assert b.te == 946684802.0
     assert b.dt0 == dt.datetime(2000, 1, 1)
     assert b.dte == dt.datetime(2000, 1, 1, 0, 0, 2)
-    assert all(b.dt == np.array(['2000-01-01T00:00:00', '2000-01-01T00:00:01', '2000-01-01T00:00:02'], dtype='datetime64'))
+    assert all(
+        b.dt
+        == np.array(
+            ["2000-01-01T00:00:00", "2000-01-01T00:00:01", "2000-01-01T00:00:02"],
+            dtype="datetime64",
+        )
+    )
     return True
 
 
@@ -395,7 +407,7 @@ def test_timeserie_empty():
         inclusive=True,
     )
     assert c.te - c.t0 == 3600.0
-    d = TimeSerie.empty(1.2, 4.8, fs=100, name='d')
+    d = TimeSerie.empty(1.2, 4.8, fs=100, name="d")
     assert d.t0 == 1.2
     assert d.te == 4.79
     return True
@@ -406,7 +418,9 @@ def test_timeserie_plot():
     a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=1)
     f, ax, lines = a.plot(show=False)
 
-    b = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="b", fs=1, t0=dt.datetime(2019,1,1))
+    b = TimeSerie(
+        [-2, -1, 0, 1, 2, 3, 4, 5], name="b", fs=1, t0=dt.datetime(2019, 1, 1)
+    )
     f, ax, lines = b.plot(as_dt=True, show=False)
     return True
 
@@ -427,19 +441,19 @@ def test_timeserie_tochannel():
     assert a.at(9) == 4
     assert a.at(10) == 5
     c = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
-    d = TimeSerie.empty(0,20, fs=2)
+    d = TimeSerie.empty(0, 20, fs=2)
     with pytest.raises(ValueError):
         c.to_channel(d)
     e = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
-    f = TimeSerie.empty(4,20, fs=1)
+    f = TimeSerie.empty(4, 20, fs=1)
     with pytest.raises(DataLossError):
         e.to_channel(f)
     g = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
-    h = TimeSerie.empty(0,8, fs=1)
+    h = TimeSerie.empty(0, 8, fs=1)
     with pytest.raises(DataLossError):
         g.to_channel(h)
     i = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=3)
-    j = TimeSerie.empty(0.5,20.5, fs=1)
+    j = TimeSerie.empty(0.5, 20.5, fs=1)
     with pytest.raises(ValueError):
         i.to_channel(j)
     return True
@@ -501,7 +515,7 @@ def test_timeserie_tostatechangearray():
 
 
 def test_timeserie_toreports():
-    a = TimeSerie(10*np.sin(np.linspace(0,2*np.pi,100)), t0=1, fs=10, name='a')
+    a = TimeSerie(10 * np.sin(np.linspace(0, 2 * np.pi, 100)), t0=1, fs=10, name="a")
     b = a > 4
     b.name = "a > 4"
     reports = b.to_reports()
@@ -540,8 +554,11 @@ def test_booleantimeserie_init():
 
 
 def test_booleantimeserie_repr():
-    a = BooleanTimeSerie([False,False,False,True,True,True], fs=2, t0=1, name="a")
-    assert repr(a) == "BooleanTimeSerie([False False False  True  True  True], t0=1, name='a', fs=2)"
+    a = BooleanTimeSerie([False, False, False, True, True, True], fs=2, t0=1, name="a")
+    assert (
+        repr(a)
+        == "BooleanTimeSerie([False False False  True  True  True], t0=1, name='a', fs=2)"
+    )
     return True
 
 
@@ -578,17 +595,24 @@ def test_statechangearray_init():
     assert compare_statechangearrays(
         g, StateChangeArray([1, 2, 3], [1, 2, 7], name="g")
     )
-    h = StateChangeArray([1, 3], t=[pytz.utc.localize(dt.datetime(2019, 1, 1, 8)),
-                                    pytz.utc.localize(dt.datetime(2019, 1, 1, 9))])
+    h = StateChangeArray(
+        [1, 3],
+        t=[
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 8)),
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 9)),
+        ],
+    )
     assert all(h.t == [1546329600.0, 1546333200.0])
     return True
 
 
 def test_statechangearray_repr():
-    a = StateChangeArray([1,2,4,7], t=[2,4,6,8], name="a")
+    a = StateChangeArray([1, 2, 4, 7], t=[2, 4, 6, 8], name="a")
     assert repr(a) == "StateChangeArray([1 2 4 7], t=[2 4 6 8], name='a')"
-    b = StateChangeArray([True,False,True,False], t=[2,4,6,8], name="b")
-    assert repr(b) == "StateChangeArray([ True False  True False], t=[2 4 6 8], name='b')"
+    b = StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="b")
+    assert (
+        repr(b) == "StateChangeArray([ True False  True False], t=[2 4 6 8], name='b')"
+    )
     return True
 
 
@@ -611,37 +635,56 @@ def test_statechangearray_iter():
 
 
 def test_statechangearray_dt():
-    a = StateChangeArray([1, 3, 5, 7, 9],
-                         t=[pytz.utc.localize(dt.datetime(2019,1,1,0)),
-                            pytz.utc.localize(dt.datetime(2019,1,1,1)),
-                            pytz.utc.localize(dt.datetime(2019,1,1,3)),
-                            pytz.utc.localize(dt.datetime(2019,1,1,6)),
-                            pytz.utc.localize(dt.datetime(2019,1,1,12))],
-                         name='a')
-    assert all(a.dt == np.array(['2019-01-01T00:00:00.000000',
-                                 '2019-01-01T01:00:00.000000',
-                                 '2019-01-01T03:00:00.000000',
-                                 '2019-01-01T06:00:00.000000',
-                                 '2019-01-01T12:00:00.000000'], dtype='datetime64'))
+    a = StateChangeArray(
+        [1, 3, 5, 7, 9],
+        t=[
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 0)),
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 1)),
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 3)),
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 6)),
+            pytz.utc.localize(dt.datetime(2019, 1, 1, 12)),
+        ],
+        name="a",
+    )
+    assert all(
+        a.dt
+        == np.array(
+            [
+                "2019-01-01T00:00:00.000000",
+                "2019-01-01T01:00:00.000000",
+                "2019-01-01T03:00:00.000000",
+                "2019-01-01T06:00:00.000000",
+                "2019-01-01T12:00:00.000000",
+            ],
+            dtype="datetime64",
+        )
+    )
     return True
 
 
 def test_statechangearray_plot():
     plt.ioff()
-    a = StateChangeArray([-2, -1, 0, 1, 2, 3, 4, 5], t=[0, 1, 2, 3, 4, 5, 8, 10], name="a")
+    a = StateChangeArray(
+        [-2, -1, 0, 1, 2, 3, 4, 5], t=[0, 1, 2, 3, 4, 5, 8, 10], name="a"
+    )
     f, ax, lines = a.plot(show=False)
 
     f, ax, lines = a.plot(show=False, style="nostyle")
 
-    b = StateChangeArray([-2, -1, 0, 1, 2, 3, 4, 5],
-                         t=[dt.datetime(2019, 1, 1, 0),
-                            dt.datetime(2019, 1, 1, 1),
-                            dt.datetime(2019, 1, 1, 3),
-                            dt.datetime(2019, 1, 1, 6),
-                            dt.datetime(2019, 1, 1, 7),
-                            dt.datetime(2019, 1, 1, 8),
-                            dt.datetime(2019, 1, 1, 10),
-                            dt.datetime(2019, 1, 1, 11)], name="b")
+    b = StateChangeArray(
+        [-2, -1, 0, 1, 2, 3, 4, 5],
+        t=[
+            dt.datetime(2019, 1, 1, 0),
+            dt.datetime(2019, 1, 1, 1),
+            dt.datetime(2019, 1, 1, 3),
+            dt.datetime(2019, 1, 1, 6),
+            dt.datetime(2019, 1, 1, 7),
+            dt.datetime(2019, 1, 1, 8),
+            dt.datetime(2019, 1, 1, 10),
+            dt.datetime(2019, 1, 1, 11),
+        ],
+        name="b",
+    )
     f, ax, lines = b.plot(as_dt=True, show=False)
     return True
 
@@ -657,53 +700,61 @@ def test_statechangearray_toevents():
 
 
 def test_statechangearray_fromevents():
-    a1 = Event(1, t=1, name='a')
-    a2 = Event(3, t=2, name='a')
-    a3 = Event(5, t=4, name='a')
-    a4 = Event(7, t=8, name='a')
+    a1 = Event(1, t=1, name="a")
+    a2 = Event(3, t=2, name="a")
+    a3 = Event(5, t=4, name="a")
+    a4 = Event(7, t=8, name="a")
     a = StateChangeArray.from_events([a1, a2, a3, a4])
-    assert compare_statechangearrays(a, StateChangeArray([1,3,5,7],t=[1,2,4,8],name='a'))
-    a5 = Event(9, t=6, name='a')
+    assert compare_statechangearrays(
+        a, StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8], name="a")
+    )
+    a5 = Event(9, t=6, name="a")
     with pytest.raises(ValueError):
-        b = StateChangeArray.from_events([a1,a2,a3,a4,a5])
+        b = StateChangeArray.from_events([a1, a2, a3, a4, a5])
     return True
 
 
 def test_statechangearray_toreports():
-    a = StateChangeArray([True,False,True,False], t=[2,4,6,8],name='a')
+    a = StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="a")
     r1, r2 = a.to_reports()
-    assert compare_reports(r1, Report(2, 4, name='a'))
-    assert compare_reports(r2, Report(6, 8, name='a'))
-    b = StateChangeArray([False, True, False, True, False], t=[1, 2, 4, 6, 8], name='b')
+    assert compare_reports(r1, Report(2, 4, name="a"))
+    assert compare_reports(r2, Report(6, 8, name="a"))
+    b = StateChangeArray([False, True, False, True, False], t=[1, 2, 4, 6, 8], name="b")
     r3, r4 = b.to_reports()
-    assert compare_reports(r3, Report(2, 4, name='b'))
-    assert compare_reports(r4, Report(6, 8, name='b'))
-    c = StateChangeArray([False, True, False, True, False], t=[1, 2, 4, 6, 8], name='c')
+    assert compare_reports(r3, Report(2, 4, name="b"))
+    assert compare_reports(r4, Report(6, 8, name="b"))
+    c = StateChangeArray([False, True, False, True, False], t=[1, 2, 4, 6, 8], name="c")
     r5, r6 = c.to_reports()
-    assert compare_reports(r5, Report(2, 4, name='c'))
-    assert compare_reports(r6, Report(6, 8, name='c'))
-    d = StateChangeArray([1,2,4,7], t=[2,4,6,8], name='d')
+    assert compare_reports(r5, Report(2, 4, name="c"))
+    assert compare_reports(r6, Report(6, 8, name="c"))
+    d = StateChangeArray([1, 2, 4, 7], t=[2, 4, 6, 8], name="d")
     with pytest.raises(ValueError):
         d.to_reports()
     return True
 
 
 def test_statechangearray_fromreports():
-    a1 = Report(t0=2, te=4, name='a')
-    a2 = Report(t0=6, te=8, name='a')
+    a1 = Report(t0=2, te=4, name="a")
+    a2 = Report(t0=6, te=8, name="a")
     a = StateChangeArray.from_reports([a1, a2])
-    assert compare_statechangearrays(a, StateChangeArray([True,False,True,False], t=[2,4,6,8],name='a'))
-    a3 = Report(t0=12, te=13, name='a')
+    assert compare_statechangearrays(
+        a, StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="a")
+    )
+    a3 = Report(t0=12, te=13, name="a")
     a3.te = 10  # this is a hacky way to test errors in the from_reports() method
     with pytest.raises(ValueError):
         b = StateChangeArray.from_reports([a1, a2, a3])
-    a4 = Report(t0=7, te=10, name='a')
+    a4 = Report(t0=7, te=10, name="a")
     with pytest.raises(ValueError):
-        c = StateChangeArray.from_reports([a1,a2,a4])
-    d = StateChangeArray.from_reports([a1, a2, a4], on_error='ignore')
-    assert compare_statechangearrays(d, StateChangeArray([True,False,True,False],t=[2,4,6,8], name='a'))
-    e = StateChangeArray.from_reports([a1, a2, a4], on_error='extend')
-    assert compare_statechangearrays(e, StateChangeArray([True,False,True,False],t=[2,4,6,10], name='a'))
+        c = StateChangeArray.from_reports([a1, a2, a4])
+    d = StateChangeArray.from_reports([a1, a2, a4], on_error="ignore")
+    assert compare_statechangearrays(
+        d, StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="a")
+    )
+    e = StateChangeArray.from_reports([a1, a2, a4], on_error="extend")
+    assert compare_statechangearrays(
+        e, StateChangeArray([True, False, True, False], t=[2, 4, 6, 10], name="a")
+    )
     return True
 
 
@@ -722,25 +773,30 @@ def test_statechangearray_where():
 
 
 def test_statechangearray_state():
-    a = StateChangeArray([True,False,True,False], t=[2,4,6,8], name="a")
+    a = StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="a")
     assert a.state() == False
     assert a.state(2) == True
     assert a.state(3) == True
     assert a.state(3.9) == True
     assert a.state(4) == False
     assert a.state(1) == None
-    b = StateChangeArray([1,3,7,9], t=[2,4,6,8], name="b")
+    b = StateChangeArray([1, 3, 7, 9], t=[2, 4, 6, 8], name="b")
     assert b.state() == 9
     assert b.state(2) == 1
     assert b.state(3) == 1
     assert b.state(3.9) == 1
     assert b.state(4) == 3
-    c = StateChangeArray([True, False,True,False],
-                         t=[dt.datetime(2019, 1, 1, 8),
-                            dt.datetime(2019, 1, 1, 9),
-                            dt.datetime(2019, 1, 1, 11),
-                            dt.datetime(2019, 1, 1, 13),], name="c")
-    assert c.state(dt.datetime(2019,1,1,8,30)) == True
+    c = StateChangeArray(
+        [True, False, True, False],
+        t=[
+            dt.datetime(2019, 1, 1, 8),
+            dt.datetime(2019, 1, 1, 9),
+            dt.datetime(2019, 1, 1, 11),
+            dt.datetime(2019, 1, 1, 13),
+        ],
+        name="c",
+    )
+    assert c.state(dt.datetime(2019, 1, 1, 8, 30)) == True
     return True
 
 
@@ -830,7 +886,7 @@ def test_statechangearray_invert():
         ),
     )
     with pytest.raises(ValueError):
-        b = StateChangeArray([1,2,3,4], t=[2, 4, 6, 8], name="b")
+        b = StateChangeArray([1, 2, 3, 4], t=[2, 4, 6, 8], name="b")
         not_b = ~b
     return True
 
@@ -960,9 +1016,11 @@ def test_report_toevent():
 
 
 def test_report_tostatechangearray():
-    a = Report(1, 4, name='a')
+    a = Report(1, 4, name="a")
     array = a.to_statechangearray()
-    assert compare_statechangearrays(array, StateChangeArray([True,False], t=[1,4], name='a'))
+    assert compare_statechangearrays(
+        array, StateChangeArray([True, False], t=[1, 4], name="a")
+    )
     return True
 
 
@@ -1006,10 +1064,12 @@ def test_event_init():
     assert e.validity == 0
     return True
 
+
 def test_event_repr():
-    a = Event(1, t=0, name='a')
+    a = Event(1, t=0, name="a")
     assert repr(a) == "Event(1, t=0, name='a')"
     return True
+
 
 def test_event_state():
     a = Event(4, t=4, name="a", validity=1)
