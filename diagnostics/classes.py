@@ -4,6 +4,8 @@ import pytz
 import numpy as np
 import matplotlib.pyplot as plt
 
+import operator as op
+
 from .log import logged
 
 from .errors import DataLossError
@@ -11,6 +13,14 @@ from .errors import DataLossError
 # TODO: think about rounding (data) and possible rounding errors when rounding data
 # TODO: implement interpolation to match channel properties (t0, fs, len(data))
 # TODO: think about displaying timeseries using datetime (UTC or LOCAL)
+
+
+OPS = {
+    ">": op.gt,
+    ">=": op.ge,
+    "<": op.lt,
+    "<=": op.le,
+}
 
 
 class TimeSerie(object):
@@ -779,7 +789,21 @@ class StateChangeArray(object):
         :return:
         """
 
-        return np.diff(self.t)
+        return np.append(np.diff(self.t), 0)
+
+    def timerule(self, duration, operator=">=", when=True, in_place=False):
+        if not self.is_bool():
+            raise ValueError("Can't perform timerule on non-boolean StateChangeArray!")
+        data = self.data
+        t = self.t
+        diff = self.duration()
+        mask = (data != when) | ((data == when) & (OPS[operator](diff, duration)))  # TODO: fix operator
+        if in_place:
+            self.data = data[mask]
+            self.t = t[mask]
+        else:
+            return BooleanStateChangeArray(data[mask], t=t[mask], name=self.name, shrink=True)
+
 
     def to_timeseries(
         self, fs, method="default", tol=1e-4, tail=0
