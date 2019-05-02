@@ -791,16 +791,26 @@ class StateChangeArray(object):
 
         return np.append(np.diff(self.t), 0)
 
-    def timerule(self, duration, operator=">=", when=True, in_place=False):
+    def timerule(self, duration, operator=">=", when=True, inplace=False):
         if not self.is_bool():
             raise ValueError("Can't perform timerule on non-boolean StateChangeArray!")
         data = self.data
         t = self.t
         diff = self.duration()
         mask = (data != when) | ((data == when) & (OPS[operator](diff, duration)))  # TODO: fix operator
-        if in_place:
-            self.data = data[mask]
-            self.t = t[mask]
+        if inplace:
+            data = data[mask]
+            t = t[mask]
+            state = None
+            new_t = []
+            new_d = []
+            for t, d in zip(t, data):
+                if state != d:
+                    state = d
+                    new_t.append(t)
+                    new_d.append(d)
+            self.t = np.array(new_t)
+            self.data = np.array(new_d)
         else:
             return BooleanStateChangeArray(data[mask], t=t[mask], name=self.name, shrink=True)
 

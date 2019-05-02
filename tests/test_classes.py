@@ -897,6 +897,68 @@ def test_statechangearray_duration():
     return True
 
 
+def test_statechangearray_timerule():
+    a = StateChangeArray(
+        [False, True, False, True, False, True, False],
+        t=[0, 5, 10, 20, 30, 45, 60],
+        name="a",
+    )
+    a_timerule_1 = a.timerule(1)
+    assert compare_statechangearrays(a_timerule_1, a)
+    b = StateChangeArray(
+        [False, True, False, True, False, True, False],
+        t=[0, 5, 10, 20, 30, 45, 60],
+        name="b",
+    )
+    b_timerule_6 = b.timerule(6)
+    assert compare_statechangearrays(
+        b_timerule_6,
+        StateChangeArray(
+            [False, True, False, True, False], t=[0, 20, 30, 45, 60], name="b"
+        ),
+    )
+    c = StateChangeArray(
+        [False, True, False, True, False, True, False],
+        t=[0, 5, 10, 20, 30, 45, 60],
+        name="c",
+    )
+    c_timerule_11 = c.timerule(11)
+    assert compare_statechangearrays(
+        c_timerule_11,
+        StateChangeArray(
+            [False, True, False], t=[0, 45, 60], name="c"
+        ),
+    )
+    d = StateChangeArray(
+        [False, True, False, True, False, True, False],
+        t=[0, 5, 10, 20, 30, 45, 60],
+        name="d",
+    )
+    d_timerule_11 = d.timerule(11, when=False, operator="<")
+    assert compare_statechangearrays(
+        d_timerule_11,
+        StateChangeArray(
+            [False, True, False, True, False], t=[0, 5, 10, 20, 60], name="d"
+        ),
+    )
+    y = StateChangeArray(
+        [False, True, False, True, False, True, False],
+        t=[0, 5, 10, 20, 30, 45, 60],
+        name="y",
+    )
+    y.timerule(6, inplace=True)
+    assert compare_statechangearrays(
+        y,
+        StateChangeArray(
+            [False, True, False, True, False], t=[0, 20, 30, 45, 60], name="y"
+        ),
+    )
+    z = StateChangeArray([1, 2, 1, 2, 1, 2, 1], t=[0, 5, 10, 20, 30, 45, 60], name="z")
+    with pytest.raises(ValueError):
+        z_time_6 = z.timerule(6)
+    return True
+
+
 def test_statechangearray_totimeseries():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name="a")
     ts_a = a.to_timeseries(fs=2)
