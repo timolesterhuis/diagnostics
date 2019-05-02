@@ -893,7 +893,7 @@ def test_statechangearray_invert():
 
 def test_statechangearray_duration():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 7], name="a")
-    assert all(a.duration() == [1, 2, 3])
+    assert all(a.duration() == [1, 2, 3, 0])
     return True
 
 
