@@ -15,12 +15,7 @@ from .errors import DataLossError
 # TODO: think about displaying timeseries using datetime (UTC or LOCAL)
 
 
-OPS = {
-    ">": op.gt,
-    ">=": op.ge,
-    "<": op.lt,
-    "<=": op.le,
-}
+OPS = {">": op.gt, ">=": op.ge, "<": op.lt, "<=": op.le}
 
 
 class TimeSerie(object):
@@ -797,7 +792,9 @@ class StateChangeArray(object):
         data = self.data
         t = self.t
         diff = self.duration()
-        mask = (data != when) | ((data == when) & (OPS[operator](diff, duration)))  # TODO: fix operator
+        mask = (data != when) | (
+            (data == when) & (OPS[operator](diff, duration))
+        )  # TODO: fix operator
         if inplace:
             data = data[mask]
             t = t[mask]
@@ -812,8 +809,9 @@ class StateChangeArray(object):
             self.t = np.array(new_t)
             self.data = np.array(new_d)
         else:
-            return BooleanStateChangeArray(data[mask], t=t[mask], name=self.name, shrink=True)
-
+            return BooleanStateChangeArray(
+                data[mask], t=t[mask], name=self.name, shrink=True
+            )
 
     def to_timeseries(
         self, fs, method="default", tol=1e-4, tail=0
