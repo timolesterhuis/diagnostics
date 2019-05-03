@@ -5,7 +5,7 @@ wheel==0.33.1
 twine==1.13.0
 pylint==2.3.1
 pytest==4.4.1
-pytest-cov==2.6.1
+pytest-cov==2.7.1
 pytest-mpl==0.10
 coveralls==1.7.0
 setuptools==41.0.1
