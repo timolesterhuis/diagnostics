@@ -35,8 +35,8 @@ Diagnostics - a toolbox built for analyzing diagnostic data!
    ignores the width and align directives, so it's actually pretty
    useless...
 
-.. image:: https://cdn.rawgit.com/tim00w/diagnostics/raw/master/docs/images/analysis.svg
-   :width: 200px
+.. image:: https://github.com/tim00w/diagnostics/blob/master/docs/images/analysis.png
+   :scale: 10 %
    :align: right
 
 
