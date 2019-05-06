@@ -1,3 +1,10 @@
+.. image:: https://github.com/tim00w/diagnostics/blob/master/docs/images/analysis.svg
+   :width: 50px
+   :height: 50px
+   :align: left
+Diagnostics - a toolbox built for analyzing diagnostic data!
+==========================================================
+
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
    :target: https://travis-ci.org/tim00w/diagnostics
    :alt: Build Status
@@ -21,16 +28,7 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
    :alt: Code style: black
-
-
-.. image:: https://github.com/tim00w/diagnostics/blob/master/docs/images/analysis.svg
-   :width: 50px
-   :height: 50px
-   :align: left
-Diagnostics - a toolbox built for analyzing diagnostic data!
-==========================================================
-
-
+   
 Installation
 ------------
 
