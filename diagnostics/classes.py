@@ -55,7 +55,7 @@ class TimeSerie(object):
             "zero_negatives": lambda x: x * (x > 0),
             "correct_negatives": lambda x: x - min(x * (x < 0)),
         }
-        self._reprconfig = {"threshold": 10, "separator": " "}
+        self._reprconfig = {"threshold": 10, "separator": ", "}
 
     @property
     def data(self):
@@ -617,7 +617,8 @@ class BooleanTimeSerie(TimeSerie):
 
     def __repr__(self):
         return "BooleanTimeSerie({}, t0={}, name={}, fs={})".format(
-            self.data, *map(repr, [self.t0, self.name, self.fs])
+            np.array2string(self.data, **self._reprconfig),
+            *map(repr, [self.t0, self.name, self.fs])
         )
 
     @logged()
@@ -677,11 +678,13 @@ class StateChangeArray(object):
         self.data = data
         self.t = t
         self.name = name
-        self._reprconfig = {"threshold": 10, "separator": " "}
+        self._reprconfig = {"threshold": 10, "separator": ", "}
 
     def __repr__(self):
         return "StateChangeArray({}, t={}, name={})".format(
-            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name)
+            np.array2string(self.data, **self._reprconfig),
+            np.array2string(self.t, **self._reprconfig),
+            repr(self.name),
         )
 
     @property
@@ -1076,7 +1079,9 @@ class BooleanStateChangeArray(StateChangeArray):
 
     def __repr__(self):
         return "BooleanStateChangeArray({}, t={}, name={})".format(
-            np.array2string(self.data, **self._reprconfig), self.t, repr(self.name)
+            np.array2string(self.data, **self._reprconfig),
+            np.array2string(self.t, **self._reprconfig),
+            repr(self.name),
         )
 
 

@@ -154,9 +154,9 @@ def test_timeserie_fsfloat():
 
 def test_timeserie_repr():
     a = TimeSerie([1, 2, 3], fs=2, t0=1, name="a")
-    assert repr(a) == "TimeSerie([1 2 3], t0=1, name='a', fs=2)"
+    assert repr(a) == "TimeSerie([1, 2, 3], t0=1, name='a', fs=2)"
     b = TimeSerie([1, 2, 3, 4, 5, 6, 7], fs=3, t0=2, name="b")
-    assert repr(b) == "TimeSerie([1 2 3 4 5 6 7], t0=2, name='b', fs=3)"
+    assert repr(b) == "TimeSerie([1, 2, 3, 4, 5, 6, 7], t0=2, name='b', fs=3)"
     return True
 
 
@@ -557,7 +557,7 @@ def test_booleantimeserie_repr():
     a = BooleanTimeSerie([False, False, False, True, True, True], fs=2, t0=1, name="a")
     assert (
         repr(a)
-        == "BooleanTimeSerie([False False False  True  True  True], t0=1, name='a', fs=2)"
+        == "BooleanTimeSerie([False, False, False,  True,  True,  True], t0=1, name='a', fs=2)"
     )
     return True
 
@@ -608,10 +608,11 @@ def test_statechangearray_init():
 
 def test_statechangearray_repr():
     a = StateChangeArray([1, 2, 4, 7], t=[2, 4, 6, 8], name="a")
-    assert repr(a) == "StateChangeArray([1 2 4 7], t=[2 4 6 8], name='a')"
+    assert repr(a) == "StateChangeArray([1, 2, 4, 7], t=[2, 4, 6, 8], name='a')"
     b = StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="b")
     assert (
-        repr(b) == "StateChangeArray([ True False  True False], t=[2 4 6 8], name='b')"
+        repr(b)
+        == "StateChangeArray([ True, False,  True, False], t=[2, 4, 6, 8], name='b')"
     )
     return True
 
@@ -924,10 +925,7 @@ def test_statechangearray_timerule():
     )
     c_timerule_11 = c.timerule(11)
     assert compare_statechangearrays(
-        c_timerule_11,
-        StateChangeArray(
-            [False, True, False], t=[0, 45, 60], name="c"
-        ),
+        c_timerule_11, StateChangeArray([False, True, False], t=[0, 45, 60], name="c")
     )
     d = StateChangeArray(
         [False, True, False, True, False, True, False],
@@ -1030,7 +1028,7 @@ def test_booleanstatechangearray_repr():
     )
     assert (
         repr(a)
-        == "BooleanStateChangeArray([False  True False  True False], t=[1 3 5 6 9], name='a')"
+        == "BooleanStateChangeArray([False,  True, False,  True, False], t=[1, 3, 5, 6, 9], name='a')"
     )
     return True
 
