@@ -2,6 +2,7 @@
    :width: 50px
    :height: 50px
    :align: left
+
 Diagnostics - a toolbox built for analyzing diagnostic data!
 ==========================================================
 
