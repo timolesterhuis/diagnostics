@@ -1,10 +1,3 @@
- Diagnostics - a toolbox built for analyzing diagnostic data!
--------------------------------------------------------------
-
-.. image:: https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png
-   :alt: *Designed by Freepik from www.flaticon.com*
-   :scale: 10 %
-
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
    :target: https://travis-ci.org/tim00w/diagnostics
    :alt: Build Status
@@ -29,6 +22,24 @@
    :target: https://github.com/ambv/black
    :alt: Code style: black
 
+Diagnostics - a toolbox built for analyzing diagnostic data!
+==========================================================
+
+.. Github carefully breaks rendering of SVG directly out of the repo,
+   so we have to redirect through cdn.rawgit.com
+   See:
+     https://github.com/isaacs/github/issues/316
+     https://github.com/github/markup/issues/556#issuecomment-288581799
+   I also tried rendering to PNG and linking to that locally, which
+   "works" in that it displays the image, but for some reason it
+   ignores the width and align directives, so it's actually pretty
+   useless...
+
+.. image:: https://cdn.rawgit.com/tim00w/diagnostics/raw/master/docs/images/analysis.svg
+   :width: 200px
+   :align: right
+
+
 Installation
 ------------
 
@@ -39,7 +50,7 @@ You can install the library using ``pip``:
 
 .. code:: bash
 
-    pip install git+https://github.com/tim00w/diagnostics.git
+    pip install pydiagnostics
 
 Alternatively, you can clone the repository and use ``setup.py`` to
 install:
