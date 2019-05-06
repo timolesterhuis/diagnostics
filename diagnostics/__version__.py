@@ -1,4 +1,4 @@
-__version__ = "0.3.5rc"
+__version__ = "0.3.5"
 __version_info__ = tuple([int(i) for i in __version__.split(".")])
 
 __author__ = "Timo Lesterhuis"
