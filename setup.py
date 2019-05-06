@@ -22,7 +22,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-with open("README.md", "r") as readme_file:
+with open("README.rst", "r") as readme_file:
     readme = readme_file.read()
 
 requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
@@ -38,7 +38,6 @@ setup(
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
     long_description=readme,
-    long_description_content_type="text/markdown",
     url="https://github.com/tim00w/diagnostics/",
     packages=find_packages(),
     install_requires=requirements,
