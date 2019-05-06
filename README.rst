@@ -3,6 +3,7 @@
 
 .. image:: https://github.com/tim00w/diagnostics/raw/master/docs/images/analysis.png
    :alt: *Designed by Freepik from www.flaticon.com*
+   :scale: 10 %
 
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
    :target: https://travis-ci.org/tim00w/diagnostics
