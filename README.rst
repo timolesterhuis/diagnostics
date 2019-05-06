@@ -4,7 +4,7 @@
    :align: left
 
 Diagnostics - a toolbox built for analyzing diagnostic data!
-==========================================================
+============================================================
 
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
    :target: https://travis-ci.org/tim00w/diagnostics
