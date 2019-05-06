@@ -22,22 +22,13 @@
    :target: https://github.com/ambv/black
    :alt: Code style: black
 
+
+.. image:: https://github.com/tim00w/diagnostics/blob/master/docs/images/analysis.svg
+   :width: 50px
+   :height: 50px
+   :align: left
 Diagnostics - a toolbox built for analyzing diagnostic data!
 ==========================================================
-
-.. Github carefully breaks rendering of SVG directly out of the repo,
-   so we have to redirect through cdn.rawgit.com
-   See:
-     https://github.com/isaacs/github/issues/316
-     https://github.com/github/markup/issues/556#issuecomment-288581799
-   I also tried rendering to PNG and linking to that locally, which
-   "works" in that it displays the image, but for some reason it
-   ignores the width and align directives, so it's actually pretty
-   useless...
-
-.. image:: https://github.com/tim00w/diagnostics/blob/master/docs/images/analysis.png
-   :scale: 10 %
-   :align: right
 
 
 Installation
