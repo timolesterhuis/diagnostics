@@ -25,7 +25,7 @@ copyright = '2019, Timo Lesterhuis'
 author = 'Timo Lesterhuis'
 
 # The full version, including alpha/beta/rc tags
-release = '0.3.1'
+release = '0.3.2rc'
 
 
 # -- General configuration ---------------------------------------------------
