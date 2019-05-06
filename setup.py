@@ -45,7 +45,9 @@ setup(
     tests_require=["pytest", "pytest-cov", "pytest-mpl"],
     cmdclass={"pytest": PyTest},
     license="MIT License",
+    include_package_data=True,
     classifiers=[
+        "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
