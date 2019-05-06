@@ -33,7 +33,7 @@ requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 
 setup(
     name="pydiagnostics",
-    version="0.3.3rc",
+    version="0.3.3",
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
