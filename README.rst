@@ -16,15 +16,19 @@ Diagnostics - a toolbox built for analyzing diagnostic data!
 .. image:: https://readthedocs.org/projects/diagnostics/badge/?version=latest
    :target: https://diagnostics.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
+   
 .. image:: https://mybinder.org/badge_logo.svg
    :target: https://mybinder.org/v2/gh/tim00w/diagnostics/master?filepath=examples/example.ipynb
    :alt: Binder
-
+   
 .. image:: https://img.shields.io/pypi/v/pydiagnostics.svg?color=blue
    :target: https://pypi.org/project/pydiagnostics/
    :alt: PyPi version
-
+   
+.. image::  https://img.shields.io/pypi/l/pydiagnostics.svg?color=purple
+   :target: https://github.com/tim00w/diagnostics/blob/master/LICENSE
+   :alt: License: MIT
+   
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
    :alt: Code style: black
