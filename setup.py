@@ -44,9 +44,12 @@ setup(
     install_requires=requirements,
     tests_require=["pytest", "pytest-cov", "pytest-mpl"],
     cmdclass={"pytest": PyTest},
+    license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    project_urls={"Documentation": "https://diagnostics.readthedocs.io/en/latest/",
+                  "Source": "https://github.com/tim00w/diagnostics"},
 )
