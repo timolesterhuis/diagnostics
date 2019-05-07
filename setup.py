@@ -38,6 +38,7 @@ setup(
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
     long_description=readme,
+    long_description_content_type="rst",
     url="https://github.com/tim00w/diagnostics/",
     packages=find_packages(),
     install_requires=requirements,
