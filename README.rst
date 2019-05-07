@@ -1,7 +1,7 @@
-.. image:: https://raw.githubusercontent.com/tim00w/diagnostics/master/docs/images/analysis.svg?sanitize=true
+..  |logo| image:: https://raw.githubusercontent.com/tim00w/diagnostics/master/docs/images/analysis.svg?sanitize=true
    :scale: 10%
-   
-   Diagnostics - a toolbox built for analyzing diagnostic data!
+
+|logo| Diagnostics - a toolbox built for analyzing diagnostic data!
 ============================================================
 
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
@@ -46,7 +46,7 @@ You can install the library using ``pip``:
 
 Alternatively, you can clone the repository and use ``setup.py`` to
 install:
-
+ 
 .. code:: bash
 
     git clone https://github.com/tim00w/diagnostics.git
