@@ -1,9 +1,7 @@
 .. image:: https://raw.githubusercontent.com/tim00w/diagnostics/master/docs/images/analysis.svg?sanitize=true
-   :width: 50px
-   :height: 50px
-   :align: left
-
-Diagnostics - a toolbox built for analyzing diagnostic data!
+   :scale: 10%
+   
+   Diagnostics - a toolbox built for analyzing diagnostic data!
 ============================================================
 
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
