@@ -1,4 +1,4 @@
-.. image:: https://github.com/tim00w/diagnostics/blob/master/docs/images/analysis.svg
+.. image:: https://raw.githubusercontent.com/tim00w/diagnostics/master/docs/images/analysis.svg?sanitize=true
    :width: 50px
    :height: 50px
    :align: left
