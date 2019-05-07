@@ -7,11 +7,19 @@ Welcome to diagnostics's documentation!
 =======================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 1
 
-   readme
-   .. changelog
+    pages/introduction
+    pages/getting_started
+    pages/advanced_usage
+    pages/odbc_configuration
+    pages/databases
+    pages/changelog
+    pages/troubleshooting
+    pages/faq
+    pages/contributing
+    pages/api_reference
+
 
 .. automodule:: diagnostics
   :members:
