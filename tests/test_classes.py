@@ -603,6 +603,11 @@ def test_statechangearray_init():
         ],
     )
     assert all(h.t == [1546329600.0, 1546333200.0])
+    i = StateChangeArray([], t=[], name='i')
+    assert len(i) == 0
+    assert len(i.data) == 0
+    assert len(i.t) == 0
+    assert i.name == 'i'
     return True
 
 

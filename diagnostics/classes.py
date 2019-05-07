@@ -633,6 +633,8 @@ class BooleanTimeSerie(TimeSerie):
 
 
 class StateChangeArray(object):
+    _reprconfig = {"threshold": 10, "separator": ", "}
+
     def __init__(self, data, t, name="", shrink=False):
         """
 
@@ -647,6 +649,14 @@ class StateChangeArray(object):
 
         if not isinstance(data, np.ndarray):
             data = np.array(data)
+
+        # special case when no data is entered
+        if len(t) == 0:
+            t = np.array(t)
+            self.data = data
+            self.t = t
+            self.name = name
+            return
 
         if isinstance(t[0], datetime.datetime):
             if t[0].tzinfo is None:
@@ -678,7 +688,7 @@ class StateChangeArray(object):
         self.data = data
         self.t = t
         self.name = name
-        self._reprconfig = {"threshold": 10, "separator": ", "}
+        return
 
     def __repr__(self):
         return "StateChangeArray({}, t={}, name={})".format(
