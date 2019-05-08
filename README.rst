@@ -1,8 +1,8 @@
 ..  |logo| image:: https://raw.githubusercontent.com/tim00w/diagnostics/master/docs/images/analysis.svg?sanitize=true
    :scale: 10%
 
-|logo| Diagnostics - a toolbox built for analyzing diagnostic data!
-===================================================================
+Diagnostics - a toolbox built for analyzing diagnostic data!
+============================================================
 
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
    :target: https://travis-ci.org/tim00w/diagnostics
@@ -32,10 +32,6 @@
    :target: https://github.com/ambv/black
    :alt: Code style: black
 
-.. image:: https://bestpractices.coreinfrastructure.org/projects/2796/badge
-   :target: https://bestpractices.coreinfrastructure.org/projects/2796
-   :alt: CII Best Practices
-   
 Installation
 ------------
 
@@ -56,9 +52,26 @@ install:
     git clone https://github.com/tim00w/diagnostics.git
     cd diagnostics
     python setup.py install
+    
+Open Source
+-----------
 
-Usage
------
+This project strives to abide by generally accepted best practices in open-source software development:
+
+.. image:: https://bestpractices.coreinfrastructure.org/projects/2796/badge
+   :target: https://bestpractices.coreinfrastructure.org/projects/2796
+   :alt: CII Best Practices
+
+Documentation
+-------------
+
+The docs are hosted on `ReadTheDocs <https://diagnostics.readthedocs.io/en/latest/>`_.
+
+
+Quickstart
+----------
+
+Eager to begin and no time to read the documentation? Here is a quickstart!
 
 TimeSeries
 ^^^^^^^^^^
@@ -212,3 +225,8 @@ Reports & Events
 ^^^^^^^^^^^^^^^^
 
 WIP
+
+.. image:: https://img.shields.io/pypi/dm/pydiagnostics.svg
+   :target: https://pypi.org/project/pydiagnostics/
+   :alt: Downloads
+
