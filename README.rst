@@ -32,7 +32,9 @@ Diagnostics - a toolbox built for analyzing diagnostic data!
    :target: https://github.com/ambv/black
    :alt: Code style: black
 
-diagnostics is a Python module designed to make analysis of diagnostic data easier.
+|
+
+**Diagnostics** is a Python module designed to make analysis of diagnostic data easier.
 It comes with a couple of clear data-structures with automatic quality checks, easy
 Boolean logic operators and built-in bookkeeping. To top that off, it's built on `numpy! <https://www.numpy.org>`_
 
