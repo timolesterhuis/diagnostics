@@ -2,6 +2,8 @@
 API
 ===
 
+.. automodule:: diagnostics
+  :members:
 
 .. autoclass:: diagnostics.TimeSerie
 

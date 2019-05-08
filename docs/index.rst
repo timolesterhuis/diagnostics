@@ -20,11 +20,7 @@ Welcome to diagnostics's documentation!
     pages/contributing
     pages/api_reference
 
-
-.. automodule:: diagnostics
-  :members:
-
-SOME TEXT
+More will be added soon!
 
 Indices and tables
 ==================
