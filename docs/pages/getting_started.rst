@@ -91,7 +91,7 @@ which only contains boolean values of when the percentage reaches below
 
     battery_below25.plot(as_dt=True, show=True)
 
-Now that's easy! We can see that our battery goes below 25% around 10:10.
+Now that's easy! We can see that our battery goes below 25% around 10:10:
 
 .. image:: ../images/battery_below25.png
 
@@ -120,7 +120,7 @@ Alternatively, we can create a ``StateChangeArray`` (or
 
     s.plot(show=True)
 
-.. image:: ../images/my_state.png
+.. image:: ../images/my_state1.png
 
 Both the data array as the values for time (``t``) can be ``list()`` or
 ``np.array()``. When a list of ``datetime`` objects is given, they are
