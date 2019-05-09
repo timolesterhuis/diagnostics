@@ -123,7 +123,7 @@ a name (default is an empty string).
                                 t0=datetime(2019,1,1,8,5), # 2019-01-01 08:05
                                 name='battery life')
 
-Now we've got our battery life set to a specific day, and gave it a
+Now we've got our battery life set to a specific (start-)datetime, and gave it a
 name. Both will come in handy later.
 
 BooleanTimeSeries
