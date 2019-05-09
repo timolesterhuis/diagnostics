@@ -1,6 +1,7 @@
 *.log
 *.log.*
 *.pyc
+pydiagnostics.egg-info/
 __pycache__
 .coverage
 htmlcov/
@@ -9,3 +10,5 @@ dist/
 diagnostics.egg-info
 build/
 docs/_build/
+.eggs/
+.ipynb_checkpoints/
