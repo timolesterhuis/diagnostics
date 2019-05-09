@@ -190,8 +190,7 @@ Luckily for us, the ``StateChangeArray`` has this functionality built in:
     f = a ^ a
     g = a ^ e
 
-..
-   Think of a way to plot multiple StateChangeArrays / TimeSeries in a single figure and implement it here
+.. Think of a way to plot multiple StateChangeArrays / TimeSeries in a single figure and implement it here
 
 That's pretty great right?
 
