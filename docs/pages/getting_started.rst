@@ -54,6 +54,8 @@ Now that we've got our data, we can easily visualize this:
 
     battery_life.plot()
 
+Which will show the following matplotlib figure:
+
 .. image:: ../images/battery_life1.png
 
 
@@ -87,9 +89,12 @@ which only contains boolean values of when the percentage reaches below
 
     battery_below25 = battery_life <= 25
 
-    battery_below25.plot(show=True)
+    battery_below25.plot(as_dt=True, show=True)
 
-Now that's easy! We can see that our battery goes below 25% at HH:MM:SS.
+Now that's easy! We can see that our battery goes below 25% around 10:10.
+
+.. image:: ../images/battery_below25.png
+
 
 StateChangeArray
 ^^^^^^^^^^^^^^^^
@@ -110,13 +115,19 @@ Alternatively, we can create a ``StateChangeArray`` (or
 .. code:: python
 
 
-    s = ds.StateChangeArray([1, 4, 8, 13], t=[1,2,4,8], name='my state')
+    s = ds.StateChangeArray([1, 4, 8, 0], t=[1,2,4,8], name='my state')
     b = ds.BooleanStateChangeArray([True, False, True, False], t=[1,3,6,9], name='b')
 
+    s.plot(show=True)
+
+.. image:: ../images/my_state.png
+
 Both the data array as the values for time (``t``) can be ``list()`` or
-``np.array()``. The time is considered as posixtime. For now it is not
-possible to give a datetimearray or list of datetimes as an input, but
-this wil be implemented in the near future.
+``np.array()``. When a list of ``datetime`` objects is given, they are
+converted to posixtime. Otherwise, the input is considered as posixtime.
+For now it is not possible to give a datetimearray as an input,
+but this wil be implemented in the near future.
+
 
 Comparing TimeSeries and StateChangeArrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -139,6 +150,10 @@ To start with TimeSeries, if two (or more) have the same array\_length,
     # It's this easy!
     c = a + b
 
+.. image:: ../images/timeserie_add.png
+
+.. code:: python
+
     # We're interested in the more extreme values, lets create TimeSeries for these:
     d = c <= -1
     e = c >=  1
@@ -155,12 +170,14 @@ To start with TimeSeries, if two (or more) have the same array\_length,
     print(f.name)
     f.plot(show=True)
 
+.. image:: ../images/timeserie_or.png
+
 Comparing StateChangeArrays would normally be a bit tricky, since the
 data is most likely non-linearly spaced. This means that we can't just
 perform vectorized boolean operations, but we'll need to combine both
 data values as well as their respective points in time.
 
-Luckily for us, the ``StateChangeArray`` has this built in:
+Luckily for us, the ``StateChangeArray`` has this functionality built in:
 
 .. code:: python
 
@@ -173,7 +190,11 @@ Luckily for us, the ``StateChangeArray`` has this built in:
     f = a ^ a
     g = a ^ e
 
+..
+   Think of a way to plot multiple StateChangeArrays / TimeSeries in a single figure and implement it here
+
 That's pretty great right?
+
 
 Reports & Events
 ^^^^^^^^^^^^^^^^
