@@ -1,8 +1,8 @@
 ..  |logo| image:: https://raw.githubusercontent.com/tim00w/diagnostics/master/docs/images/analysis.svg?sanitize=true
    :scale: 10%
 
-Diagnostics - a toolbox built for analyzing diagnostic data!
-============================================================
+Diagnostics - A toolbox for analyzing diagnostic data
+=====================================================
 
 .. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
    :target: https://travis-ci.org/tim00w/diagnostics
