@@ -181,8 +181,8 @@ Luckily for us, the ``StateChangeArray`` has this functionality built in:
 
 .. code:: python
 
-    a = StateChangeArray([True, False, True, False], t=[2,4,6,8], name='a')
-    b = StateChangeArray([True, False, True, False], t=[3,5,7,9], name='b')
+    a = ds.StateChangeArray([True, False, True, False], t=[2,4,6,8], name='a')
+    b = ds.StateChangeArray([True, False, True, False], t=[3,5,7,9], name='b')
 
     c = a | b
     d = a & b
@@ -190,9 +190,18 @@ Luckily for us, the ``StateChangeArray`` has this functionality built in:
     f = a ^ a
     g = a ^ e
 
-.. Think of a way to plot multiple StateChangeArrays / TimeSeries in a single figure and implement it here
+    a.plot(other=b)
+    c.plot(other=d)
+
+.. image:: ../images/statechangearray_ab.png
+
+.. image:: ../images/statechangearray_cd.png
 
 That's pretty great right?
+
+.. note::
+    plotting is still an experimental feature, and the API/implementation
+    might change in the near future.
 
 
 Reports & Events
@@ -203,5 +212,5 @@ WIP
 What to read next
 -----------------
 
-I'm not sure either, and I have to write it first!
+I'm not sure either, and I'm the one that has to write it first!
 

@@ -1032,12 +1032,19 @@ class StateChangeArray(object):
             data, t=new_t, name="({} ^ {})".format(self.name, other.name), shrink=True
         )
 
-    def __invert__(self):
+    def __invert__(self):  # THINKOF: should this return BooleanStateChangeArray?
         if not self.is_bool():
             raise ValueError(
                 "Can't perform bitwise operation on non-boolean StateChangeArray!"
             )
         return StateChangeArray(~self.data, t=self.t, name="(~{})".format(self.name))
+
+    def _line(self, **kwargs):
+        as_dt = kwargs.get("as_dt", False)
+        if as_dt:
+            return self.data, self.dt, self.name, "datetime [utc]"
+        else:
+            return self.data, self.t, self.name, "time [s]"
 
     def plot(self, **kwargs):
         """
@@ -1048,27 +1055,34 @@ class StateChangeArray(object):
 
         show = kwargs.get("show", True)
         as_dt = kwargs.get("as_dt", False)
+        alpha = kwargs.get("alpha", 1)
         style = kwargs.get("style", "block")
         ylabel = kwargs.get("ylabel", "")
+        other = kwargs.get("other", [])
+        if isinstance(other, StateChangeArray):
+            other = [other]
+
         f = plt.figure(frameon=False)
         ax = f.add_subplot(111)
         ax.set_title("StateChangeArray")
-
-        if as_dt:
-            timeaxis = self.dt
-            xlabel = "datetime [utc]"
-        else:
-            timeaxis = self.t
-            xlabel = "time [s]"
 
         if style == "block":
             drawstyle = "steps-post"
         else:
             drawstyle = None
 
+        data, timeaxis, label, xlabel = self._line(**kwargs)
+
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        lines = ax.plot(timeaxis, self.data, label=self.name, drawstyle=drawstyle)
+        lines = ax.plot(timeaxis, self.data, label=label, drawstyle=drawstyle)
+        for line in other:
+            if not isinstance(line, StateChangeArray):
+                raise ValueError("can only plot multiple StateChangeArrays together!")
+
+            data, timeaxis, label, xlabel = line._line(**kwargs)
+            l = ax.plot(timeaxis, data, label=label, drawstyle=drawstyle, alpha=alpha)
+            lines += l
         ax.legend()
         if show:  # pragma: no cover
             f.show()
