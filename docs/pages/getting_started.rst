@@ -2,6 +2,10 @@
 Getting started
 ===============
 
+.. note::
+    You can also try out this quickstart as a jupyter notebook on
+    `Binder <https://mybinder.org/v2/gh/tim00w/diagnostics/master?filepath=examples/example.ipynb>`_!
+
 Installation
 ------------
 
