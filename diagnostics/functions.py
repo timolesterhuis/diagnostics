@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def plot(*args, **kwargs):
 
     fig = kwargs.pop("figure", plt.figure())
-    align_x = kwargs.pop("align_x", False)
+    align_x = kwargs.pop("align", kwargs.pop("align_x", False))
     as_dt = kwargs.get("as_dt", False)
     cmap = kwargs.get("cmap", plt.get_cmap("tab10"))
 

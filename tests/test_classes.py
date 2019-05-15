@@ -693,6 +693,15 @@ def test_statechangearray_plot():
     return True
 
 
+def test_multiple_plots():
+    plt.ioff()
+    a = StateChangeArray([0, 1, 0, 1, 0], t=[0, 5, 10, 20, 30], name="a").to_bool()
+    b = StateChangeArray([0, 1, 0, 1, 0], t=[0, 2, 5, 7, 15], name="b").to_bool()
+    c = TimeSerie(np.linspace(0, 10, 100), t0=0, fs=10, name="c")
+    a.plot(b, c, align_x=True)
+    return True
+
+
 def test_statechangearray_toevents():
     a = StateChangeArray([1, 3, 5, 7], t=[1, 2, 4, 8], name="a")
     e1, e2, e3, e4 = a.to_events()
