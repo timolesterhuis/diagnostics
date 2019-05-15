@@ -58,6 +58,8 @@ class TimeSerie(object):
             "correct_negatives": lambda x: x - min(x * (x < 0)),
         }
         self._reprconfig = {"threshold": 10, "separator": ", "}
+        self._type = "TimeSerie"
+        return
 
     @property
     def data(self):
@@ -602,6 +604,8 @@ class BooleanTimeSerie(TimeSerie):
         if self.data.dtype != np.bool:
             raise ValueError("data is not of dtype 'bool'")
 
+        self._type = "BooleanTimeSerie"
+
     @property
     def data(self):
         return self._data
@@ -687,6 +691,9 @@ class StateChangeArray(object):
         self.data = data
         self.t = t
         self.name = name
+
+        self._type = "StateChangeArray"
+
         return
 
     def __repr__(self):
@@ -1076,6 +1083,9 @@ class BooleanStateChangeArray(StateChangeArray):
         if self.data.dtype != np.bool:
             raise ValueError("data is not of dtype 'bool'")
 
+        self._type = "BooleanStateChangeArray"
+        return
+
     def __repr__(self):
         return "BooleanStateChangeArray({}, t={}, name={})".format(
             np.array2string(self.data, **self._reprconfig),
@@ -1106,6 +1116,8 @@ class Report(object):
             raise ValueError("te can't be before t0!")
         self.te = te
         self.name = name
+        self._type = "Report"
+
 
     def __repr__(self):
         return "Report(t0={}, te={}, name={})".format(
@@ -1172,6 +1184,8 @@ class Event(object):
         self.t = t
         self.name = name
         self.validity = validity
+        self._type = "Report"
+
 
     @property
     def state(self):
