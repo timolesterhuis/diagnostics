@@ -416,12 +416,12 @@ def test_timeserie_empty():
 def test_timeserie_plot():
     plt.ioff()
     a = TimeSerie([-2, -1, 0, 1, 2, 3, 4, 5], name="a", fs=1, t0=1)
-    f, ax, lines = a.plot(show=False)
+    f = a.plot()
 
     b = TimeSerie(
         [-2, -1, 0, 1, 2, 3, 4, 5], name="b", fs=1, t0=dt.datetime(2019, 1, 1)
     )
-    f, ax, lines = b.plot(as_dt=True, show=False)
+    f = b.plot(as_dt=True)
     return True
 
 
@@ -673,9 +673,7 @@ def test_statechangearray_plot():
     a = StateChangeArray(
         [-2, -1, 0, 1, 2, 3, 4, 5], t=[0, 1, 2, 3, 4, 5, 8, 10], name="a"
     )
-    f, ax, lines = a.plot(show=False)
-
-    f, ax, lines = a.plot(show=False, style="nostyle")
+    f = a.plot()
 
     b = StateChangeArray(
         [-2, -1, 0, 1, 2, 3, 4, 5],
@@ -691,7 +689,7 @@ def test_statechangearray_plot():
         ],
         name="b",
     )
-    f, ax, lines = b.plot(as_dt=True, show=False)
+    f = b.plot(as_dt=True)
     return True
 
 
