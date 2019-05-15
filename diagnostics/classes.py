@@ -3,10 +3,12 @@ import pytz
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 import operator as op
 
 from .log import logged
+from .functions import plot
 
 from .errors import DataLossError
 
@@ -414,33 +416,30 @@ class TimeSerie(object):
         for t, v in zip(self.t, self.data):
             yield t, v
 
-    def plot(self, **kwargs):
+    def line(self, **kwargs):
+        defaults = dict(label=self.name, as_dt=False)
+        defaults.update(kwargs)
+
+        x = self._x(as_dt=defaults.pop("as_dt"))
+        y = self._y()
+        return Line2D(x, y, **defaults)
+
+    def _x(self, as_dt=False):
+        if as_dt:
+            return self.dt
+        else:
+            return self.t
+
+    def _y(self):
+        return self.data
+
+    def plot(self, *args, **kwargs):
         """
 
         :param kwargs:
         :return:
         """
-
-        show = kwargs.get("show", True)
-        as_dt = kwargs.get("as_dt", False)
-        ylabel = kwargs.get("ylabel", "")
-        f = plt.figure(frameon=False)
-        ax = f.add_subplot(111)
-        ax.set_title("TimeSerie")
-        if as_dt:
-            timeaxis = self.dt
-            xlabel = kwargs.get("xlabel", "datetime [utc]")
-        else:
-            xlabel = kwargs.get("xlabel", "time [s]")
-            timeaxis = self.t
-
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-        lines = ax.plot(timeaxis, self.data, label=self.name)
-        ax.legend()
-        if show:  # pragma: no cover
-            f.show()
-        return f, ax, lines
+        return plot(self, *args, **kwargs)
 
     def to_channel(self, c):
         """
@@ -1039,54 +1038,30 @@ class StateChangeArray(object):
             )
         return StateChangeArray(~self.data, t=self.t, name="(~{})".format(self.name))
 
-    def _line(self, **kwargs):
-        as_dt = kwargs.get("as_dt", False)
-        if as_dt:
-            return self.data, self.dt, self.name, "datetime [utc]"
-        else:
-            return self.data, self.t, self.name, "time [s]"
+    def line(self, **kwargs):
+        defaults = dict(label=self.name, drawstyle="steps-post", as_dt=False)
+        defaults.update(kwargs)
 
-    def plot(self, **kwargs):
+        x = self._x(as_dt=defaults.pop("as_dt"))
+        y = self._y()
+        return Line2D(x, y, **defaults)
+
+    def _x(self, as_dt=False):
+        if as_dt:
+            return self.dt
+        else:
+            return self.t
+
+    def _y(self):
+        return self.data
+
+    def plot(self, *args, **kwargs):
         """
 
         :param kwargs:
         :return:
         """
-
-        show = kwargs.get("show", True)
-        as_dt = kwargs.get("as_dt", False)
-        alpha = kwargs.get("alpha", 1)
-        style = kwargs.get("style", "block")
-        ylabel = kwargs.get("ylabel", "")
-        other = kwargs.get("other", [])
-        if isinstance(other, StateChangeArray):
-            other = [other]
-
-        f = plt.figure(frameon=False)
-        ax = f.add_subplot(111)
-        ax.set_title("StateChangeArray")
-
-        if style == "block":
-            drawstyle = "steps-post"
-        else:
-            drawstyle = None
-
-        data, timeaxis, label, xlabel = self._line(**kwargs)
-
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-        lines = ax.plot(timeaxis, self.data, label=label, drawstyle=drawstyle)
-        for line in other:
-            if not isinstance(line, StateChangeArray):
-                raise ValueError("can only plot multiple StateChangeArrays together!")
-
-            data, timeaxis, label, xlabel = line._line(**kwargs)
-            l = ax.plot(timeaxis, data, label=label, drawstyle=drawstyle, alpha=alpha)
-            lines += l
-        ax.legend()
-        if show:  # pragma: no cover
-            f.show()
-        return f, ax, lines
+        return plot(self, *args, **kwargs)
 
 
 class BooleanStateChangeArray(StateChangeArray):
