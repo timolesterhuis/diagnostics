@@ -117,14 +117,17 @@ class TimeSerie(object):
     def __getitem__(self, index):
         return self.data.__getitem__(index)
 
+    def _check_channel_other(self, other):
+        if self.channel != other.channel:
+            raise ValueError(
+                "TimeSerie channels inconsistent! ({} & {})".format(
+                    self.channel, other.channel
+                )
+            )
+
     def __eq__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return BooleanTimeSerie(
                 self.data == other.data,
                 t0=self.t0,
@@ -136,12 +139,7 @@ class TimeSerie(object):
 
     def __ne__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return BooleanTimeSerie(
                 self.data != other.data,
                 t0=self.t0,
@@ -153,12 +151,7 @@ class TimeSerie(object):
 
     def __lt__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return BooleanTimeSerie(
                 self.data < other.data,
                 t0=self.t0,
@@ -170,12 +163,7 @@ class TimeSerie(object):
 
     def __gt__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return BooleanTimeSerie(
                 self.data > other.data,
                 t0=self.t0,
@@ -187,12 +175,7 @@ class TimeSerie(object):
 
     def __le__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return BooleanTimeSerie(
                 self.data <= other.data,
                 t0=self.t0,
@@ -204,12 +187,7 @@ class TimeSerie(object):
 
     def __ge__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return BooleanTimeSerie(
                 self.data >= other.data,
                 t0=self.t0,
@@ -221,12 +199,7 @@ class TimeSerie(object):
 
     def __add__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return TimeSerie(
                 self.data + other.data,
                 t0=self.t0,
@@ -241,12 +214,7 @@ class TimeSerie(object):
 
     def __sub__(self, other):
         if isinstance(other, TimeSerie):
-            if self.channel != other.channel:
-                raise ValueError(
-                    "TimeSerie channels inconsistent! ({} & {})".format(
-                        self.channel, other.channel
-                    )
-                )
+            self._check_channel_other(other)
             return TimeSerie(
                 self.data - other.data,
                 t0=self.t0,
@@ -260,12 +228,7 @@ class TimeSerie(object):
         return TimeSerie(other - self.data, t0=self.t0, fs=self.fs, name="")
 
     def __and__(self, other):
-        if self.channel != other.channel:
-            raise ValueError(
-                "TimeSerie channels inconsistent! ({} & {})".format(
-                    other.channel, self.channel
-                )
-            )
+        self._check_channel_other(other)
         if not (self.is_bool() and other.is_bool()):
             raise ValueError(
                 "Can't perform bitwise operation on non-boolean TimeSeries!"
@@ -278,12 +241,7 @@ class TimeSerie(object):
         )
 
     def __or__(self, other):
-        if self.channel != other.channel:
-            raise ValueError(
-                "TimeSerie channels inconsistent! ({} & {})".format(
-                    other.channel, self.channel
-                )
-            )
+        self._check_channel_other(other)
         if not (self.is_bool() and other.is_bool()):
             raise ValueError(
                 "Can't perform bitwise operation on non-boolean TimeSeries!"
@@ -296,12 +254,7 @@ class TimeSerie(object):
         )
 
     def __xor__(self, other):
-        if self.channel != other.channel:
-            raise ValueError(
-                "TimeSerie channels inconsistent! ({} & {})".format(
-                    other.channel, self.channel
-                )
-            )
+        self._check_channel_other(other)
         if not (self.is_bool() and other.is_bool()):
             raise ValueError(
                 "Can't perform bitwise operation on non-boolean TimeSeries!"
@@ -661,6 +614,10 @@ class StateChangeArray(object):
             self.name = name
             return
 
+        if hasattr(t, "dtype"):
+            if t.dtype == np.dtype("<M8[ns]"):
+                t = t.astype("int64") / 1e9
+
         if isinstance(t[0], datetime.datetime):
             if t[0].tzinfo is None:
                 t = [ti.replace(tzinfo=pytz.UTC).timestamp() for ti in t]
@@ -983,6 +940,126 @@ class StateChangeArray(object):
             data[t] = state
         return data
 
+    def __lt__(self, other):
+        if isinstance(other, StateChangeArray):
+            states = self._combine(other)
+            data = []
+            new_t = []
+            for t, state in states.items():
+                if None in state:
+                    continue
+                data.append(state[0] < state[1])
+                new_t.append(t)
+            return BooleanStateChangeArray(
+                data, t=new_t, name="{} < {}".format(self.name, other.name), shrink=True
+            )
+        else:
+            return BooleanStateChangeArray(
+                self.data < other, t=self.t, name="", shrink=True
+            )
+
+    def __gt__(self, other):
+        if isinstance(other, StateChangeArray):
+            states = self._combine(other)
+            data = []
+            new_t = []
+            for t, state in states.items():
+                if None in state:
+                    continue
+                data.append(state[0] > state[1])
+                new_t.append(t)
+            return BooleanStateChangeArray(
+                data, t=new_t, name="{} > {}".format(self.name, other.name), shrink=True
+            )
+        else:
+            return BooleanStateChangeArray(
+                self.data > other, t=self.t, name="", shrink=True
+            )
+
+    def __le__(self, other):
+        if isinstance(other, StateChangeArray):
+            states = self._combine(other)
+            data = []
+            new_t = []
+            for t, state in states.items():
+                if None in state:
+                    continue
+                data.append(state[0] <= state[1])
+                new_t.append(t)
+            return BooleanStateChangeArray(
+                data,
+                t=new_t,
+                name="{} <= {}".format(self.name, other.name),
+                shrink=True,
+            )
+        else:
+            return BooleanStateChangeArray(
+                self.data <= other, t=self.t, name="", shrink=True
+            )
+
+    def __ge__(self, other):
+        if isinstance(other, StateChangeArray):
+            states = self._combine(other)
+            data = []
+            new_t = []
+            for t, state in states.items():
+                if None in state:
+                    continue
+                data.append(state[0] >= state[1])
+                new_t.append(t)
+            return BooleanStateChangeArray(
+                data,
+                t=new_t,
+                name="{} >= {}".format(self.name, other.name),
+                shrink=True,
+            )
+        else:
+            return BooleanStateChangeArray(
+                self.data >= other, t=self.t, name="", shrink=True
+            )
+
+    def __add__(self, other):
+        if isinstance(other, StateChangeArray):
+            states = self._combine(other)
+            data = []
+            new_t = []
+            for t, state in states.items():
+                if None in state:
+                    continue
+                data.append(state[0] + state[1])
+                new_t.append(t)
+            return BooleanStateChangeArray(
+                data, t=new_t, name="{} + {}".format(self.name, other.name), shrink=True
+            )
+        else:
+            return BooleanStateChangeArray(
+                self.data + other, t=self.t, name="", shrink=True
+            )
+
+    def __radd__(self, other):
+        return StateChangeArray(other + self.data, t=self.t, name=self.name)
+
+    def __sub__(self, other):
+        if isinstance(other, StateChangeArray):
+            states = self._combine(other)
+            data = []
+            new_t = []
+            for t, state in states.items():
+                if None in state:
+                    continue
+                data.append(state[0] - state[1])
+                new_t.append(t)
+            return BooleanStateChangeArray(
+                data, t=new_t, name="{} - {}".format(self.name, other.name), shrink=True
+            )
+        else:
+            return BooleanStateChangeArray(
+                self.data + other, t=self.t, name="", shrink=True
+            )
+
+    def __rsub__(self, other):
+        return StateChangeArray(other - self.data, t=self.t, name=self.name)
+
     def __and__(self, other):
         if not isinstance(other, StateChangeArray):
             raise ValueError("Expected StateChangeArray!")
@@ -1013,7 +1090,7 @@ class StateChangeArray(object):
         data = []
         new_t = []
         for t, state in states.items():
-            data.append(state[0] or False | state[1] or False)
+            data.append((state[0] or False) | (state[1] or False))
             new_t.append(t)
         return BooleanStateChangeArray(
             data, t=new_t, name="({} | {})".format(self.name, other.name), shrink=True
@@ -1118,7 +1195,6 @@ class Report(object):
         self.name = name
         self._type = "Report"
 
-
     def __repr__(self):
         return "Report(t0={}, te={}, name={})".format(
             *map(repr, [self.t0, self.te, self.name])
@@ -1185,7 +1261,6 @@ class Event(object):
         self.name = name
         self.validity = validity
         self._type = "Report"
-
 
     @property
     def state(self):

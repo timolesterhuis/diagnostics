@@ -819,6 +819,124 @@ def test_statechangearray_getitem():
     return True
 
 
+def test_statechangearray_lt():
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = StateChangeArray([1, 5, 3, 9], t=[1, 3, 4, 6], name="b")
+    c = a < b
+    assert compare_statechangearrays(
+        c,
+        BooleanStateChangeArray(
+            [False, True, False, True], t=[1, 3, 4, 6], name="a < b"
+        ),
+    )
+    d = StateChangeArray([1, 5, 9], t=[1, 5, 6], name="d")
+    e = a < d
+    assert compare_statechangearrays(
+        e, BooleanStateChangeArray([False, True], t=[1, 6], name="a < d")
+    )
+    f = a < 5
+    assert compare_statechangearrays(
+        f, BooleanStateChangeArray([True, False], t=[1, 4], name="")
+    )
+    g = StateChangeArray([1, 5, 3, 9], t=[2, 4, 5, 7], name="g")
+    h = a < g
+    assert compare_statechangearrays(
+        h, BooleanStateChangeArray([False, True], t=[2, 7], name="a < g")
+    )
+    return True
+
+
+def test_statechangearray_gt():
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = StateChangeArray([1, 5, 3, 9], t=[1, 3, 4, 6], name="b")
+    c = a > b
+    assert compare_statechangearrays(
+        c,
+        BooleanStateChangeArray(
+            [True, False, True, False], t=[1, 3, 4, 6], name="a > b"
+        ),
+    )
+    d = StateChangeArray([1, 5, 9], t=[1, 5, 6], name="d")
+    e = a > d
+    assert compare_statechangearrays(
+        e, BooleanStateChangeArray([True, False], t=[1, 6], name="a > d")
+    )
+    f = a > 5
+    assert compare_statechangearrays(
+        f, BooleanStateChangeArray([False, True], t=[1, 4], name="")
+    )
+    g = StateChangeArray([1, 5, 3, 9], t=[2, 4, 5, 7], name="g")
+    h = a > g
+    assert compare_statechangearrays(
+        h, BooleanStateChangeArray([True, False], t=[2, 7], name="a > g")
+    )
+    return True
+
+
+def test_statechangearray_le():
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = StateChangeArray([1, 4, 3, 9], t=[1, 3, 4, 6], name="b")
+    c = a <= b
+    assert compare_statechangearrays(
+        c,
+        BooleanStateChangeArray(
+            [False, True, False, True], t=[1, 3, 4, 6], name="a <= b"
+        ),
+    )
+    d = StateChangeArray([1, 4, 3, 9], t=[2, 3, 4, 6], name="d")
+    e = a <= d
+    assert compare_statechangearrays(
+        e,
+        BooleanStateChangeArray(
+            [False, True, False, True], t=[2, 3, 4, 6], name="a <= d"
+        ),
+    )
+    f = a <= 4
+    assert compare_statechangearrays(
+        f, BooleanStateChangeArray([True, False], t=[1, 4], name="")
+    )
+    return True
+
+
+def test_statechangearray_ge():
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = StateChangeArray([1, 4, 3, 9], t=[1, 3, 4, 6], name="b")
+    c = a >= b
+    assert compare_statechangearrays(
+        c, BooleanStateChangeArray([True, False], t=[1, 6], name="a >= b")
+    )
+    d = StateChangeArray([1, 4, 3, 9], t=[2, 3, 4, 6], name="d")
+    e = a >= d
+    assert compare_statechangearrays(
+        e, BooleanStateChangeArray([True, False], t=[2, 6], name="a >= d")
+    )
+    f = a >= 4
+    assert compare_statechangearrays(
+        f, BooleanStateChangeArray([False, True], t=[1, 3], name="")
+    )
+    return True
+
+
+def test_statechangearray_add():
+    # TODO
+    return True
+
+
+def test_statechangearray_radd():
+    # TODO
+    return True
+
+
+def test_statechangearray_sub():
+    # TODO
+    return True
+
+
+def test_statechangearray_rsub():
+    # TODO
+    return True
+
+
 def test_statechangearray_and():
     a = StateChangeArray([True, False, True, False], t=[2, 4, 6, 8], name="a")
     b = StateChangeArray([True, False, True, False], t=[3, 5, 7, 9], name="b")
