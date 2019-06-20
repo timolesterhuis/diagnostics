@@ -10,4 +10,4 @@ pytest-mpl==0.10
 coveralls==1.7.0
 setuptools==41.0.1
 bump2version==0.5.10
-sphinx==2.0.1 # https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
+sphinx==2.1.2 # https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
