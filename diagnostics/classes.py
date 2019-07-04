@@ -619,11 +619,11 @@ class StateChangeArray(object):
             if t.dtype == np.dtype("<M8[ns]"):
                 t = t.astype("int64") / 1e9
             # for us unit, use:
-            elif t.dtype == np.dtype('<M8[us]'):
-                t = t.astype('int64') / 1e6
+            elif t.dtype == np.dtype("<M8[us]"):
+                t = t.astype("int64") / 1e6
                 # for ms unit, use:
-            elif t.dtype == np.dtype('<M8[ms]'):
-                t = t.astype('int64') / 1e3
+            elif t.dtype == np.dtype("<M8[ms]"):
+                t = t.astype("int64") / 1e3
             else:
                 t = t.astype("int64")
 
@@ -1039,9 +1039,7 @@ class StateChangeArray(object):
                 data, t=new_t, name="{} + {}".format(self.name, other.name), shrink=True
             )
         else:
-            return StateChangeArray(
-                self.data + other, t=self.t, name="", shrink=True
-            )
+            return StateChangeArray(self.data + other, t=self.t, name="", shrink=True)
 
     def __radd__(self, other):
         return StateChangeArray(other + self.data, t=self.t, name="")
@@ -1058,9 +1056,7 @@ class StateChangeArray(object):
                 data, t=new_t, name="{} - {}".format(self.name, other.name), shrink=True
             )
         else:
-            return StateChangeArray(
-                self.data - other, t=self.t, name="", shrink=True
-            )
+            return StateChangeArray(self.data - other, t=self.t, name="", shrink=True)
 
     def __rsub__(self, other):
         return StateChangeArray(other - self.data, t=self.t, name="")
