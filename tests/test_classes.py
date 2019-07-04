@@ -608,6 +608,17 @@ def test_statechangearray_init():
     assert len(i.data) == 0
     assert len(i.t) == 0
     assert i.name == "i"
+
+    j = StateChangeArray(np.arange(0,10),
+                         t=np.arange("2019-01-01T00:00:00",
+                                     "2019-01-01T00:00:10",
+                                     dtype="datetime64"),
+                         name="j")
+    assert len(j) == 10
+    assert len(j.data) == 10
+    assert j.name == "j"
+    assert j.t[0] == 1546300800
+    assert j.t[-1] == 1546300809
     return True
 
 
@@ -918,22 +929,58 @@ def test_statechangearray_ge():
 
 
 def test_statechangearray_add():
-    # TODO
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = StateChangeArray([1, 4, 3, 9], t=[1, 3, 4, 6], name="b")
+    c = a + b
+    assert compare_statechangearrays(
+        c, StateChangeArray([3, 8, 9, 17], t=[1, 3, 4, 6], name="a + b")
+    )
+    d = StateChangeArray([1, 2, 3], t=[2, 3, 5], name="d")
+    e = a + d
+    assert compare_statechangearrays(
+        e, StateChangeArray([2, 3, 6, 8, 9, 11], t=[1, 2, 3, 4, 5, 6], name="a + d")
+    )
+    f = a + 1
+    assert compare_statechangearrays(
+        f, StateChangeArray([3, 5, 7, 9], t=[1, 3, 4, 6], name="")
+    )
     return True
 
 
 def test_statechangearray_radd():
-    # TODO
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = 1 + a
+    assert compare_statechangearrays(
+        b, StateChangeArray([3, 5, 7, 9], t=[1, 3, 4, 6], name="")
+    )
     return True
 
 
 def test_statechangearray_sub():
-    # TODO
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = StateChangeArray([1, 4, 3, 9], t=[1, 3, 4, 6], name="b")
+    c = a - b
+    assert compare_statechangearrays(
+        c, StateChangeArray([1, 0, 3, -1], t=[1, 3, 4, 6], name="a - b")
+    )
+    d = StateChangeArray([1, 2, 3], t=[2, 3, 5], name="d")
+    e = a - d
+    assert compare_statechangearrays(
+        e, StateChangeArray([2, 1, 2, 4, 3, 5], t=[1, 2, 3, 4, 5, 6], name="a - d")  # FIXME
+    )
+    f = a - 1
+    assert compare_statechangearrays(
+        f, StateChangeArray([1, 3, 5, 7], t=[1, 3, 4, 6], name="")
+    )
     return True
 
 
 def test_statechangearray_rsub():
-    # TODO
+    a = StateChangeArray([2, 4, 6, 8], t=[1, 3, 4, 6], name="a")
+    b = 1 - a
+    assert compare_statechangearrays(
+        b, StateChangeArray([-1, -3, -5, -7], t=[1, 3, 4, 6], name="")
+    )
     return True
 
 

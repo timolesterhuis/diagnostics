@@ -615,8 +615,17 @@ class StateChangeArray(object):
             return
 
         if hasattr(t, "dtype"):
+            # for ss unit, use:
             if t.dtype == np.dtype("<M8[ns]"):
                 t = t.astype("int64") / 1e9
+            # for us unit, use:
+            elif t.dtype == np.dtype('<M8[us]'):
+                t = t.astype('int64') / 1e6
+                # for ms unit, use:
+            elif t.dtype == np.dtype('<M8[ms]'):
+                t = t.astype('int64') / 1e3
+            else:
+                t = t.astype("int64")
 
         if isinstance(t[0], datetime.datetime):
             if t[0].tzinfo is None:
@@ -920,13 +929,13 @@ class StateChangeArray(object):
     def __getitem__(self, item):
         return self.data.__getitem__(item)
 
-    def _combine(self, other):
+    def _combine(self, other, null=None):
         left = self.to_events()
         right = other.to_events()
         left_t = [e.t for e in left]
         right_t = [e.t for e in right]
         times = sorted(left_t + right_t)
-        state = (None, None)
+        state = (null, null)
         data = dict()
         for t in times:
             if left:
@@ -1020,45 +1029,41 @@ class StateChangeArray(object):
 
     def __add__(self, other):
         if isinstance(other, StateChangeArray):
-            states = self._combine(other)
+            states = self._combine(other, null=0)
             data = []
             new_t = []
             for t, state in states.items():
-                if None in state:
-                    continue
                 data.append(state[0] + state[1])
                 new_t.append(t)
-            return BooleanStateChangeArray(
+            return StateChangeArray(
                 data, t=new_t, name="{} + {}".format(self.name, other.name), shrink=True
             )
         else:
-            return BooleanStateChangeArray(
+            return StateChangeArray(
                 self.data + other, t=self.t, name="", shrink=True
             )
 
     def __radd__(self, other):
-        return StateChangeArray(other + self.data, t=self.t, name=self.name)
+        return StateChangeArray(other + self.data, t=self.t, name="")
 
     def __sub__(self, other):
         if isinstance(other, StateChangeArray):
-            states = self._combine(other)
+            states = self._combine(other, null=0)
             data = []
             new_t = []
             for t, state in states.items():
-                if None in state:
-                    continue
                 data.append(state[0] - state[1])
                 new_t.append(t)
-            return BooleanStateChangeArray(
+            return StateChangeArray(
                 data, t=new_t, name="{} - {}".format(self.name, other.name), shrink=True
             )
         else:
-            return BooleanStateChangeArray(
-                self.data + other, t=self.t, name="", shrink=True
+            return StateChangeArray(
+                self.data - other, t=self.t, name="", shrink=True
             )
 
     def __rsub__(self, other):
-        return StateChangeArray(other - self.data, t=self.t, name=self.name)
+        return StateChangeArray(other - self.data, t=self.t, name="")
 
     def __and__(self, other):
         if not isinstance(other, StateChangeArray):
