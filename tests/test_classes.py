@@ -609,16 +609,43 @@ def test_statechangearray_init():
     assert len(i.t) == 0
     assert i.name == "i"
 
-    j = StateChangeArray(np.arange(0,10),
-                         t=np.arange("2019-01-01T00:00:00",
-                                     "2019-01-01T00:00:10",
-                                     dtype="datetime64"),
-                         name="j")
-    assert len(j) == 10
-    assert len(j.data) == 10
-    assert j.name == "j"
+    j = StateChangeArray(
+        np.arange(0, 10),
+        t=np.arange("2019-01-01T00:00:00", "2019-01-01T00:00:10", dtype="datetime64"),
+        name="j",
+    )
     assert j.t[0] == 1546300800
     assert j.t[-1] == 1546300809
+    k = StateChangeArray(
+        np.arange(0, 1000),
+        t=np.arange(
+            "2019-01-01T00:00:00", "2019-01-01T00:00:01", dtype="datetime64[ms]"
+        ),
+        name="k",
+    )
+    assert len(k) == 1000
+    assert k.t[0] == 1546300800
+    assert k.t[-1] == 1546300800.999
+    l = StateChangeArray(
+        np.arange(0, 1000),
+        t=np.arange(
+            "2019-01-01T00:00:00", "2019-01-01T00:00:00.001", dtype="datetime64[us]"
+        ),
+        name="l",
+    )
+    assert len(l) == 1000
+    assert l.t[0] == 1546300800
+    assert l.t[-1] == 1546300800.000999
+    m = StateChangeArray(
+        np.arange(0, 1000),
+        t=np.arange(
+            "2019-01-01T00:00:00", "2019-01-01T00:00:00.000001", dtype="datetime64[ns]"
+        ),
+        name="m",
+    )
+    assert len(m) == 1000
+    assert m.t[0] == 1546300800
+    assert m.t[-1] == 1546300800.000000999
     return True
 
 
@@ -966,7 +993,10 @@ def test_statechangearray_sub():
     d = StateChangeArray([1, 2, 3], t=[2, 3, 5], name="d")
     e = a - d
     assert compare_statechangearrays(
-        e, StateChangeArray([2, 1, 2, 4, 3, 5], t=[1, 2, 3, 4, 5, 6], name="a - d")  # FIXME
+        e,
+        StateChangeArray(
+            [2, 1, 2, 4, 3, 5], t=[1, 2, 3, 4, 5, 6], name="a - d"
+        ),  # FIXME
     )
     f = a - 1
     assert compare_statechangearrays(
