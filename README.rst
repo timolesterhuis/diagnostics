@@ -4,8 +4,8 @@
 Diagnostics - A toolbox for analyzing diagnostic data
 =====================================================
 
-.. image:: https://travis-ci.org/tim00w/diagnostics.svg?branch=master
-   :target: https://travis-ci.org/tim00w/diagnostics
+.. image:: https://travis-ci.org/timolesterhuis/diagnostics.svg?branch=master
+   :target: https://travis-ci.org/timolesterhuis/diagnostics
    :alt: Build Status
 
 .. image:: https://coveralls.io/repos/github/tim00w/diagnostics/badge.svg?branch=master
