@@ -8,8 +8,8 @@ Diagnostics - A toolbox for analyzing diagnostic data
    :target: https://travis-ci.org/timolesterhuis/diagnostics
    :alt: Build Status
 
-.. image:: https://coveralls.io/repos/github/tim00w/diagnostics/badge.svg?branch=master
-   :target: https://coveralls.io/github/tim00w/diagnostics?branch=master
+.. image:: https://coveralls.io/repos/github/timolesterhuis/diagnostics/badge.svg?branch=master
+   :target: https://coveralls.io/github/timolesterhuis/diagnostics?branch=master
    :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/diagnostics/badge/?version=latest
@@ -17,7 +17,7 @@ Diagnostics - A toolbox for analyzing diagnostic data
    :alt: Documentation Status
    
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/tim00w/diagnostics/master?filepath=examples/example.ipynb
+   :target: https://mybinder.org/v2/gh/timolesterhuis/diagnostics/master?filepath=%2Fexamples%2Fexample.ipynb
    :alt: Binder
    
 .. image:: https://img.shields.io/pypi/v/pydiagnostics.svg?color=blue
@@ -25,7 +25,7 @@ Diagnostics - A toolbox for analyzing diagnostic data
    :alt: PyPi version
    
 .. image::  https://img.shields.io/pypi/l/pydiagnostics.svg?color=purple
-   :target: https://github.com/tim00w/diagnostics/blob/master/LICENSE
+   :target: https://github.com/timolesterhuis/diagnostics/blob/master/LICENSE
    :alt: License: MIT
    
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
@@ -55,7 +55,7 @@ install:
  
 .. code:: bash
 
-    git clone https://github.com/tim00w/diagnostics.git
+    git clone https://github.com/timolesterhuis/diagnostics.git
     cd diagnostics
     python setup.py install
     
