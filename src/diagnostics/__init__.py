@@ -12,5 +12,6 @@ from .classes import BooleanStateChangeArray
 from .classes import Report
 from .classes import Event
 
+from .errors import DataLossError
 
 plt.ion()
