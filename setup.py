@@ -48,7 +48,7 @@ setup(
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
-    long_description=read("readme.rst"),
+    long_description=read("README.rst"),
     long_description_content_type="text/x-rst",
     url="https://github.com/tim00w/diagnostics/",
     project_urls={
