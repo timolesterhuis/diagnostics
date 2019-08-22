@@ -742,7 +742,7 @@ class StateChangeArray(object):
             data.append(False)
 
         return cls(
-            data=data, t=t, name=r.name
+            data=data, t=t, name=reports[0].name
         )  # THINKOF: I do not check for consistency in r.name
 
     def events(self):
