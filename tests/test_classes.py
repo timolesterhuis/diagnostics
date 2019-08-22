@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pytest
-from src.diagnostics import (
+from diagnostics import (
     TimeSerie,
     BooleanTimeSerie,
     StateChangeArray,
@@ -9,7 +9,7 @@ from src.diagnostics import (
     Report,
     Event,
 )
-from src.diagnostics import DataLossError
+from diagnostics import DataLossError
 import datetime as dt
 import pytz
 
