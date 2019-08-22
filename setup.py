@@ -1,5 +1,7 @@
-import os
+import io
 import sys
+from glob import glob
+
 
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
@@ -22,8 +24,13 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-with open("README.rst", "r") as readme_file:
-    readme = readme_file.read()
+def read(*names, **kwargs):
+    with io.open(
+        join(dirname(__file__), *names),
+        encoding=kwargs.get('encoding', 'utf8')
+    ) as fh:
+        return fh.read()
+
 
 requirements = ["pytz>=2018", "numpy>=1.16.0", "matplotlib>=3.0.0"]
 
@@ -37,7 +44,7 @@ setup(
     author="Timo Lesterhuis",
     author_email="timolesterhuis@gmail.com",
     description="A toolbox to analyse diagnostic data!",
-    long_description=readme,
+    long_description=read("readme.rst"),
     long_description_content_type="text/x-rst",
     url="https://github.com/tim00w/diagnostics/",
     project_urls={

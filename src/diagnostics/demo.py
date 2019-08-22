@@ -26,7 +26,6 @@ class TimeGenerator(object):
 
 
 class CodeGenerator(object):
-
     def __init__(self, code_mu, code_sigma, pause_mu, pause_sigma, name=""):
 
         self.code_mu = code_mu
@@ -60,7 +59,7 @@ class CodeGenerator(object):
         array = []
         while total < t:
             code, pause = self.run_once()
-            total += (code + pause)
+            total += code + pause
             array.append((code, pause))
         return array
 
