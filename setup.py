@@ -40,7 +40,15 @@ setup(
     long_description=readme,
     long_description_content_type="text/x-rst",
     url="https://github.com/tim00w/diagnostics/",
-    packages=find_packages(),
+    project_urls={
+        'Documentation': 'https://diagnostics.readthedocs.io/',
+        #'Changelog': 'https://python-nameless.readthedocs.io/en/latest/changelog.html',
+        "Source": "https://github.com/tim00w/diagnostics",
+        'Issue Tracker': 'https://github.com/timolesterhuis/diagnostics/issues',
+    },
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
+    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     install_requires=requirements,
     tests_require=["pytest", "pytest-cov", "pytest-mpl"],
     cmdclass={"pytest": PyTest},
@@ -54,6 +62,4 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    project_urls={"Documentation": "https://diagnostics.readthedocs.io/en/latest/",
-                  "Source": "https://github.com/tim00w/diagnostics"},
 )
