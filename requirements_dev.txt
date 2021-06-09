@@ -1,6 +1,6 @@
 
 black==19.3b0
-pip==19.1
+pip==19.2
 wheel==0.33.1
 twine==1.13.0
 pylint==2.3.1
